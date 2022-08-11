@@ -1,10 +1,15 @@
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_swagger.views import get_swagger_view
 
 from .views_api import *
 
+schema_view = get_swagger_view(title='Pastebin API')
+
 urlpatterns = [
     # API
+    path('', schema_view),
+
     path('token/', obtain_auth_token),
 
     path('user/', UserDetailByToken.as_view(), name="user_detail_by_token"),

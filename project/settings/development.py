@@ -8,6 +8,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'app.apps.AppConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_extensions',
+    'rest_framework_swagger',
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
