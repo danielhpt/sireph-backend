@@ -152,6 +152,7 @@ class TeamList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=TeamSerializer)
     def post(self, request):  # working
         serializer = TeamSerializer(data=request.data.copy())
 
