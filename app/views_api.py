@@ -1,9 +1,10 @@
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404
+from rest_framework import permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView, Response, status
-
+from drf_yasg.utils import swagger_auto_schema
 
 from .serializers import *
 
@@ -14,6 +15,7 @@ class UserDetailByToken(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request):  # working
         serializer = UserSimplifiedSerializer(request.user)
 
@@ -26,6 +28,7 @@ class UserInactive(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         actives = TeamTechnician.objects.filter(technician=user, active=True)
@@ -44,6 +47,7 @@ class UserList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAdminUser]
 
+    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request):  # working
         users = User.objects.all()
         serializer = UserSimplifiedSerializer(users, many=True)
@@ -57,6 +61,7 @@ class UserDetail(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         serializer = UserSimplifiedSerializer(user)
@@ -66,24 +71,28 @@ class UserDetail(APIView):
 
 # done
 class UserTeamList(APIView):
+
     """List the teams of an User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         teams = Team.objects.filter(team_technicians__technician=user)
         serializer = TeamSerializer(teams, many=True)
 
-        return Response(serializer.data)
+        return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(request_body=TeamSerializer)
     def post(self, request, user_id):  # working todo maybe
         serializer = TeamSerializer(data=request.data.copy())
 
         if serializer.is_valid():
             serializer.save()
             result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -92,6 +101,7 @@ class UserActiveOccurrence(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=user, active=True)
@@ -120,6 +130,7 @@ class UserOccurrenceList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=user)
@@ -134,6 +145,7 @@ class TeamList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAdminUser]
 
+    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
     def get(self, request):  # working
         teams = Team.objects.all()
         serializer = TeamSerializer(teams, many=True)
@@ -157,6 +169,7 @@ class TeamDetail(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
     def get(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
         serializer = TeamSerializer(team)
@@ -182,6 +195,7 @@ class TeamOccurrencesList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
     def get(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
         occurrence = Occurrence.objects.filter(team=team)
@@ -210,6 +224,7 @@ class UserTeamActive(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         teams = Team.objects.filter(team_technicians__technician=user, team_technicians__active=True)
@@ -229,6 +244,7 @@ class OccurrenceList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
     def get(self, request):  # working
         occurrences = Occurrence.objects.all()
         serializer = OccurrenceSerializer(occurrences, many=True)
@@ -242,6 +258,7 @@ class OccurrenceDetails(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         serializer = OccurrenceDetailSerializer(occurrence)
@@ -264,6 +281,7 @@ class OccurrenceVictimsList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: VictimSerializer(many=True)})
     def get(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         victims = Victim.objects.filter(occurrence=occurrence)
@@ -294,6 +312,7 @@ class OccurrenceStateList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: OccurrenceStateSerializer(many=True)})
     def get(self, request, occurrence_id):  # working
         occurrence = Occurrence.objects.get(pk=occurrence_id)
         occurrence_states = OccurrenceState.objects.filter(occurrence=occurrence)
@@ -323,6 +342,7 @@ class VictimDetails(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: VictimDetailsSerializer(many=True)})
     def get(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         serializer = VictimDetailsSerializer(victim)
@@ -347,6 +367,7 @@ class VictimPharmacyList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: PharmacySerializer(many=True)})
     def get(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         pharmacies = Pharmacy.objects.filter(victim=victim)
@@ -374,6 +395,7 @@ class VictimPharmacyDetail(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: PharmacySerializer(many=True)})
     def get(self, request, victim_id, pharmacy_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         pharmacy = get_object_or_404(Pharmacy, pk=pharmacy_id, victim=victim)
@@ -388,6 +410,7 @@ class VictimEvaluationList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: EvaluationSerializer(many=True)})
     def get(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         evaluations = Evaluation.objects.filter(victim=victim)
@@ -415,6 +438,7 @@ class VictimEvaluationDetail(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: EvaluationSerializer(many=True)})
     def get(self, request, victim_id, evaluation_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         evaluation = get_object_or_404(Evaluation, pk=evaluation_id, victim=victim)
@@ -620,6 +644,7 @@ class TypeOfTransportList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: TypeOfTransportSerializer(many=True)})
     def get(self, request):
         transports_type = TypeOfTransport.objects.all()
         serializer = TypeOfTransportSerializer(transports_type, many=True)
@@ -632,6 +657,7 @@ class NonTransportReasonList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: NonTransportReasonSerializer(many=True)})
     def get(self, request):
         non_transport_reason = NonTransportReason.objects.all()
         serializer = NonTransportReasonSerializer(non_transport_reason)
@@ -644,6 +670,7 @@ class StateList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: StateSerializer(many=True)})
     def get(self, request):
         states = State.objects.all()
         serializer = StateSerializer(states, many=True)
