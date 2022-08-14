@@ -159,7 +159,8 @@ class TeamList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -204,6 +205,7 @@ class TeamOccurrencesList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=OccurrenceSerializer)
     def post(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
 
@@ -215,7 +217,8 @@ class TeamOccurrencesList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = OccurrenceSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -290,6 +293,7 @@ class OccurrenceVictimsList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=VictimSerializer)
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
 
@@ -302,7 +306,8 @@ class OccurrenceVictimsList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = VictimSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -321,6 +326,7 @@ class OccurrenceStateList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=OccurrenceStateSerializer)
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         data = request.data.copy()
@@ -332,7 +338,8 @@ class OccurrenceStateList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = OccurrenceStateSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -376,6 +383,7 @@ class VictimPharmacyList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=PharmacyDetailSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -385,7 +393,8 @@ class VictimPharmacyList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = PharmacySerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -419,6 +428,7 @@ class VictimEvaluationList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=EvaluationDetailSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -428,7 +438,8 @@ class VictimEvaluationList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = EvaluationSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -454,6 +465,7 @@ class VictimSymptom(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=SymptomSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -463,7 +475,8 @@ class VictimSymptom(APIView):
         if serializer.is_valid():
             serializer.save()
             result = SymptomSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -486,6 +499,7 @@ class VictimProcedureRCP(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=ProcedureRCPSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -495,7 +509,8 @@ class VictimProcedureRCP(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureRCPSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -518,6 +533,7 @@ class VictimProcedureVentilation(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=ProcedureVentilationSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -527,7 +543,8 @@ class VictimProcedureVentilation(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureVentilationSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -550,6 +567,7 @@ class VictimProcedureProtocol(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=ProcedureProtocolSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -559,7 +577,8 @@ class VictimProcedureProtocol(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureProtocolSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -582,6 +601,7 @@ class VictimProcedureCirculation(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=ProcedureCirculationSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -591,7 +611,8 @@ class VictimProcedureCirculation(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureCirculationSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -614,6 +635,7 @@ class VictimProcedureScale(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=ProcedureScaleSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -623,7 +645,8 @@ class VictimProcedureScale(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureScaleSerializer(serializer.instance)
-            return Response(result.data, status=status.HTTP_201_CREATED)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
