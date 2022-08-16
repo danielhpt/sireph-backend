@@ -81,6 +81,16 @@ class TeamAdmin(admin.ModelAdmin):
         TeamTechnicianInline,
     ]
 
+class CivilianProfilesInLine(admin.TabularInline):
+    model = CivilianProfile
+
+
+class OnBoardingUserAdmin(admin.ModelAdmin):
+    model = OnBoardingUser
+    inlines = [
+        CivilianProfilesInLine,
+    ]
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
@@ -90,3 +100,4 @@ admin.site.register(State)
 admin.site.register(NonTransportReason)
 admin.site.register(TypeOfTransport)
 admin.site.register(Team, TeamAdmin)
+admin.site.register(OnBoardingUser, OnBoardingUserAdmin)
