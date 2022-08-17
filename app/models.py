@@ -52,6 +52,17 @@ class TeamTechnician(models.Model):
         return str(self.team.id) + ' - ' + self.technician.get_username() + active + team_leader
 
 
+class Central(models.Model):
+    name = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    capacity = models.IntegerField()
+    current_capacity = models.IntegerField()
+    contact = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+
 class Occurrence(models.Model):
     occurrence_number = models.IntegerField()
     entity = models.CharField(max_length=50)
@@ -67,9 +78,31 @@ class Occurrence(models.Model):
         related_name="occurrences",
         on_delete=models.RESTRICT
     )
+    central = models.ForeignKey(
+        Central,
+        related_name="centrals",
+        on_delete=models.RESTRICT
+    )
 
     def __str__(self):
         return str(self.id) + ' - ' + str(self.occurrence_number)
+
+
+class Dispatcher(models.Model):
+    dispatcher = models.ForeignKey(
+        User,
+        on_delete=models.RESTRICT,
+        related_name='dispatcher_user'
+    )
+    central = models.ForeignKey(
+        Central,
+        on_delete=models.RESTRICT,
+        related_name="central_user"
+    )
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.dispatcher.get_username()
 
 
 class State(models.Model):
@@ -114,6 +147,33 @@ class NonTransportReason(models.Model):
         return self.non_transport_reason
 
 
+class Hospital(models.Model):
+    designation = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    area_of_action = models.CharField(max_length=50)
+    contact = models.IntegerField()
+
+    def __str__(self):
+        return self.designation
+
+
+class HospitalStaff(models.Model):
+    employee = models.ForeignKey(
+        User,
+        on_delete=models.RESTRICT,
+        related_name="staff_user"
+    )
+    hospital = models.ForeignKey(
+        Hospital,
+        on_delete=models.RESTRICT,
+        related_name="hospital_employee"
+    )
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.employee.get_username()
+
+
 class Victim(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     birthdate = models.DateField(null=True, blank=True)
@@ -129,8 +189,7 @@ class Victim(models.Model):
     usual_medication = models.CharField(max_length=100, null=True, blank=True)
     risk_situation = models.CharField(max_length=50, null=True, blank=True)
     medical_followup = models.BooleanField()
-    health_unit_origin = models.CharField(max_length=100, null=True, blank=True)
-    health_unit_destination = models.CharField(max_length=100, null=True, blank=True)
+    hospital_checkin_date = models.DateTimeField(max_length=100, null=True, blank=True)
     episode_number = models.PositiveIntegerField()
     comments = models.CharField(max_length=400, null=True, blank=True)
     type_of_emergency = models.CharField(max_length=100, null=True, blank=True)
@@ -151,6 +210,11 @@ class Victim(models.Model):
         Occurrence,
         on_delete=models.RESTRICT,
         related_name='victims'
+    )
+    hospital = models.ForeignKey(
+        Hospital,
+        on_delete=models.RESTRICT,
+        related_name='victim_hospital'
     )
 
     def __str__(self):
@@ -312,6 +376,7 @@ class ProcedureProtocol(models.Model):
 
     def __str__(self):
         return str(self.victim.id) + ' - Protocol procedures'
+
 
 class OnBoardingUser(models.Model):
     OnBoardingUserId = models.IntegerField()

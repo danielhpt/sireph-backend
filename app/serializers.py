@@ -143,7 +143,7 @@ class VictimSerializer(serializers.ModelSerializer):
         model = Victim
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
                   'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
-                  'medical_followup', 'health_unit_origin', 'health_unit_destination', 'episode_number', 'comments',
+                  'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
                   'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'SIV_SAV']
 
     def create(self, validated_data):
@@ -359,7 +359,7 @@ class VictimDetailsSerializer(serializers.ModelSerializer):
         model = Victim
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
                   'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
-                  'medical_followup', 'health_unit_origin', 'health_unit_destination', 'episode_number', 'comments',
+                  'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
                   'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'evaluations',
                   'symptom', 'procedure_rcp', 'procedure_ventilation', 'procedure_protocol',
                   'procedure_circulation', 'procedure_scale', 'pharmacies', 'SIV_SAV']

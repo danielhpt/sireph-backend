@@ -53,6 +53,10 @@ class EvaluationInline(admin.TabularInline):
     model = Evaluation
 
 
+class HospitalAdmin(admin.ModelAdmin):
+    model = Hospital
+
+
 class VictimAdmin(admin.ModelAdmin):
     inlines = [
         EvaluationInline,
@@ -64,6 +68,10 @@ class VictimAdmin(admin.ModelAdmin):
         ProcedureScaleInline,
         PharmacyInline,
     ]
+
+
+class CentralAdmin(admin.ModelAdmin):
+    model = Central
 
 
 class OccurrenceStateInline(admin.TabularInline):
@@ -80,6 +88,15 @@ class TeamAdmin(admin.ModelAdmin):
     inlines = [
         TeamTechnicianInline,
     ]
+
+
+class DispatcherAdmin(admin.ModelAdmin):
+    model = Dispatcher
+
+
+class HospitalStaffAdmin(admin.ModelAdmin):
+    model = HospitalStaff
+
 
 class CivilianProfilesInLine(admin.TabularInline):
     model = CivilianProfile
@@ -101,3 +118,7 @@ admin.site.register(NonTransportReason)
 admin.site.register(TypeOfTransport)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(OnBoardingUser, OnBoardingUserAdmin)
+admin.site.register(Hospital, HospitalAdmin)
+admin.site.register(Central, CentralAdmin)
+admin.site.register(HospitalStaff, HospitalStaffAdmin)
+admin.site.register(Dispatcher, DispatcherAdmin)
