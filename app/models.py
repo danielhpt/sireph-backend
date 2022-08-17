@@ -376,38 +376,3 @@ class ProcedureProtocol(models.Model):
 
     def __str__(self):
         return str(self.victim.id) + ' - Protocol procedures'
-
-
-class OnBoardingUser(models.Model):
-    OnBoardingUserId = models.IntegerField()
-    PhoneNumber = models.IntegerField()
-    Email = models.CharField(max_length=25)
-    Address = models.CharField(max_length=500)
-    Password = models.CharField(max_length=250)
-    ConfirmPassword = models.CharField(max_length=25)
-    HasSBVKnowledge = models.BooleanField()
-    HasAgreed1 = models.BooleanField()
-    HasAgreed2 = models.BooleanField()
-    HasAgreed3 = models.BooleanField()
-
-
-class CivilianProfile(models.Model):
-    IdentificationNumber = models.IntegerField()
-    FileBin = models.BinaryField()
-    Name = models.CharField(max_length=25)
-    Surname = models.CharField(max_length=25)
-    DateOfBirth = models.DateField()
-    Gender = models.CharField(max_length=25)
-    EmergencyContact = models.IntegerField()
-    BloodType = models.CharField(max_length=5)
-    HasCronicalDesease = models.BooleanField()
-    CronicalDeseases = models.CharField(max_length=250)
-    HasAllergies = models.BooleanField()
-    Allergies = models.CharField(max_length=250)
-    HasUsualMedication = models.BooleanField()
-    UsualMedication = models.CharField(max_length=250)
-    OnBoardingUserId = models.ForeignKey(
-        OnBoardingUser,
-        on_delete=models.RESTRICT,
-        related_name='profiles'
-    )

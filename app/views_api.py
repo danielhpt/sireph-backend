@@ -71,7 +71,6 @@ class UserDetail(APIView):
 
 # done
 class UserTeamList(APIView):
-
     """List the teams of an User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -718,3 +717,33 @@ class StateList(APIView):
         serializer = StateSerializer(states, many=True)
 
         return Response(serializer.data)
+
+
+class UserCreate(APIView):
+    """Create or Update a Django User"""
+
+    @swagger_auto_schema(request_body=UserSerializer)
+    def post(self, request):
+        serializer = UserSerializer(data=request.data.copy())
+
+        if serializer.is_valid():
+            serializer.save()
+            result = UserSerializer(User.objects.get(pk=serializer.instance.id))
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(request_body=UserSerializer)
+    def put(self, request, user_id):  # working
+        user = get_object_or_404(User, pk=user_id)
+        data = request.data.copy()
+        serializer = UserSerializer(user, data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            result = UserSerializer(User.objects.get(pk=serializer.instance.id))
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

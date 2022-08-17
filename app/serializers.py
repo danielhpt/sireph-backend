@@ -363,3 +363,24 @@ class VictimDetailsSerializer(serializers.ModelSerializer):
                   'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'evaluations',
                   'symptom', 'procedure_rcp', 'procedure_ventilation', 'procedure_protocol',
                   'procedure_circulation', 'procedure_scale', 'pharmacies', 'SIV_SAV']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+
+    def create(self, validated_data):
+        validated_data = self.data.serializer.initial_data
+        user = User.objects.create(**validated_data)
+        return user
+
+    def update(self, instance, validated_data):
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.password = validated_data.get('password', instance.password)
+
+        instance.save()
+
+        return instance
