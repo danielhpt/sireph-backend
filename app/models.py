@@ -53,14 +53,13 @@ class TeamTechnician(models.Model):
 
 
 class Central(models.Model):
-    name = models.CharField(max_length=50)
+    designation = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
-    capacity = models.IntegerField()
-    current_capacity = models.IntegerField()
+    area_of_action = models.CharField(max_length=50)
     contact = models.IntegerField()
 
     def __str__(self):
-        return self.name
+        return self.designation
 
 
 class Occurrence(models.Model):
@@ -148,13 +147,14 @@ class NonTransportReason(models.Model):
 
 
 class Hospital(models.Model):
-    designation = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
-    area_of_action = models.CharField(max_length=50)
+    capacity = models.IntegerField()
+    current_capacity = models.IntegerField()
     contact = models.IntegerField()
 
     def __str__(self):
-        return self.designation
+        return self.name
 
 
 class HospitalStaff(models.Model):

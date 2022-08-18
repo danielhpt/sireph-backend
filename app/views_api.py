@@ -719,6 +719,72 @@ class StateList(APIView):
         return Response(serializer.data)
 
 
+class HospitalList(APIView):
+    """List all Hospitals"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: HospitalSerializer(many=True)})
+    def get(self, request):
+        hospitals = Hospital.objects.all()
+        serializer = HospitalSerializer(hospitals, many=True)
+
+        return Response(serializer.data)
+
+
+class CentralList(APIView):
+    """List all Emergency Stations"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: CentralSerializer(many=True)})
+    def get(self, request):
+        centrals = Central.objects.all()
+        serializer = CentralSerializer(centrals, many=True)
+
+        return Response(serializer.data)
+
+
+class DispatcherList(APIView):
+    """List all Dispatchers"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: DispatcherSerializer(many=True)})
+    def get(self, request):
+        dispatchers = Dispatcher.objects.all()
+        serializer = DispatcherSerializer(dispatchers, many=True)
+
+        return Response(serializer.data)
+
+
+class DispatcherDetail(APIView):
+    """List a specific User that is a Dispatcher"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: DispatcherSerializer(many=True)})
+    def get(self, request, user_id):  # working
+        user = get_object_or_404(User, pk=user_id)
+        dispatchers = Dispatcher.objects.filter(dispatcher=user)
+        serializer = DispatcherSerializer(dispatchers, many=True)
+
+        return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
+
+
+class HospitalStaffList(APIView):
+    """List all Hospital Staff Users"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: HospitalStaffSerializer(many=True)})
+    def get(self, request):
+        employees = HospitalStaff.objects.all()
+        serializer = HospitalStaffSerializer(employees, many=True)
+
+        return Response(serializer.data)
+
+
 class UserCreate(APIView):
     """Create or Update a Django User"""
 

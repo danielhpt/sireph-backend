@@ -56,13 +56,42 @@ class TeamSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CentralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Central
+        fields = ['id', 'designation', 'address', 'area_of_action', 'contact']
+
+
+class DispatcherSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='dispatcher.id')
+    username = serializers.ReadOnlyField(source='dispatcher.username')
+    first_name = serializers.ReadOnlyField(source='dispatcher.first_name')
+    last_name = serializers.ReadOnlyField(source='dispatcher.last_name')
+
+    class Meta:
+        model = Dispatcher
+        fields = ['id', 'username', 'first_name', 'last_name', 'active', 'central']
+
+
+class HospitalStaffSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='employee.id')
+    username = serializers.ReadOnlyField(source='employee.username')
+    first_name = serializers.ReadOnlyField(source='employee.first_name')
+    last_name = serializers.ReadOnlyField(source='employee.last_name')
+
+    class Meta:
+        model = HospitalStaff
+        fields = ['id', 'username', 'first_name', 'last_name', 'active', 'hospital']
+
+
 class OccurrenceSerializer(serializers.ModelSerializer):
     team = TeamSerializer(read_only=True)
+    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'team']
+                  'parish', 'municipality', 'central', 'team']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -134,17 +163,24 @@ class NonTransportReasonSerializer(serializers.ModelSerializer):
         fields = ['id', 'non_transport_reason']
 
 
+class HospitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = ['id', 'name', 'address', 'capacity', 'current_capacity', 'contact']
+
+
 class VictimSerializer(serializers.ModelSerializer):
     type_of_transport = TypeOfTransportSerializer(read_only=True)
     non_transport_reason = NonTransportReasonSerializer(read_only=True)
     occurrence = OccurrenceSimplifiedSerializer(read_only=True)
+    hospital = HospitalSerializer(read_only=True)
 
     class Meta:
         model = Victim
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
                   'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
                   'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
-                  'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'SIV_SAV']
+                  'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'hospital', 'SIV_SAV']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data

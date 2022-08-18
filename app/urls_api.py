@@ -32,6 +32,8 @@ urlpatterns = [
     path('users/', UserList.as_view(), name="user_list"),  # admin only
     path('users/<int:user_id>/', UserDetail.as_view(), name="user_detail"),
     path('users/<int:user_id>/teams/', UserTeamList.as_view(), name="user_team_list"),
+    path('users/dispatchers/', DispatcherList.as_view(), name="user_dispatcher_list"),
+    path('users/employees/', HospitalStaffList.as_view(), name="user_employee_list"),
     path('users/<int:user_id>/occurrences/', UserOccurrenceList.as_view(), name="user_occurrences_list"),
 
     path('teams/', TeamList.as_view(), name="team_list"),  # admin only
@@ -61,4 +63,6 @@ urlpatterns = [
     path('victims/<int:victim_id>/procedure_circulation/', VictimProcedureCirculation.as_view(),
          name="victim_procedure_circulation"),
     path('victims/<int:victim_id>/procedure_scale/', VictimProcedureScale.as_view(), name="victim_procedure_scale"),
+    path('hospitals/', HospitalList.as_view(), name="hospital_list"),
+    path('centrals/', CentralList.as_view(), name="central_list"),
 ]
