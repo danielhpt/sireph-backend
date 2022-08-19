@@ -320,26 +320,26 @@ class CentralOccurrencesList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, central_id):  # working
         central = get_object_or_404(Central, pk=central_id)
         occurrences = Occurrence.objects.filter(central=central)
-        serializer = OccurrenceSerializer(occurrences, many=True)
+        serializer = OccurrenceDetailSerializer(occurrences, many=True)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=OccurrenceSerializer)
+    @swagger_auto_schema(request_body=OccurrenceDetailSerializer)
     def post(self, request, central_id):  # working
-        central = get_object_or_404(Team, pk=central_id)
+        central = get_object_or_404(Central, pk=central_id)
 
         data = request.data.copy()
         data['central'] = central
 
-        serializer = OccurrenceSerializer(data=data)
+        serializer = OccurrenceDetailSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
-            result = OccurrenceSerializer(serializer.instance)
+            result = OccurrenceDetailSerializer(serializer.instance)
             return Response(data={"status": "OK", "message": result.data},
                             status=status.HTTP_201_CREATED)
 

@@ -86,12 +86,11 @@ class HospitalStaffSerializer(serializers.ModelSerializer):
 
 class OccurrenceSerializer(serializers.ModelSerializer):
     team = TeamSerializer(read_only=True)
-    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'central', 'team']
+                  'parish', 'municipality', 'team']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -144,11 +143,12 @@ class OccurrenceDetailSerializer(serializers.ModelSerializer):
     victims = VictimSimplifiedSerializer(many=True, read_only=True)
     states = OccurrenceStateSerializer(many=True, read_only=True)
     team = TeamSerializer(read_only=True)
+    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'team', 'victims', 'states']
+                  'parish', 'municipality', 'central', 'team', 'victims', 'states']
 
 
 class TypeOfTransportSerializer(serializers.ModelSerializer):

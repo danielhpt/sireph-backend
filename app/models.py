@@ -83,7 +83,7 @@ class Occurrence(models.Model):
     )
     central = models.ForeignKey(
         Central,
-        related_name="centrals",
+        related_name="occurrences",
         on_delete=models.RESTRICT,
         blank=True,
         null=True,
