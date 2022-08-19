@@ -723,6 +723,23 @@ class HospitalVictimsList(APIView):
 
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=VictimSerializer)
+    def post(self, request, hospital_id):  # working
+        hospital = get_object_or_404(Hospital, pk=hospital_id)
+
+        data = request.data.copy()
+        data['hospital'] = hospital
+
+        serializer = VictimSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            result = VictimSerializer(serializer.instance)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TypeOfTransportList(APIView):
     """List all Type of transports"""
