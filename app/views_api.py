@@ -839,17 +839,3 @@ class UserCreate(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @swagger_auto_schema(request_body=UserSerializer)
-    def put(self, request, user_id):  # working
-        user = get_object_or_404(User, pk=user_id)
-        data = request.data.copy()
-        serializer = UserSerializer(user, data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            result = UserSerializer(User.objects.get(pk=serializer.instance.id))
-            return Response(data={"status": "OK", "message": result.data},
-                            status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
