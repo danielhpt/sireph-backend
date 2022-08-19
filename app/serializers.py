@@ -59,7 +59,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class CentralSerializer(serializers.ModelSerializer):
     class Meta:
         model = Central
-        fields = ['id', 'designation', 'address', 'area_of_action', 'contact']
+        fields = ['id', 'designation', 'address', 'area_of_action', 'contact', 'is_administrative']
 
 
 class DispatcherSerializer(serializers.ModelSerializer):

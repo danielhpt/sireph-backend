@@ -315,6 +315,36 @@ class OccurrenceVictimsList(APIView):
         return Response(data={"status": "NOT OK", "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CentralOccurrencesList(APIView):
+    """List all Occurrences of a Central"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+    def get(self, request, central_id):  # working
+        central = get_object_or_404(Central, pk=central_id)
+        occurrences = Occurrence.objects.filter(central=central)
+        serializer = OccurrenceSerializer(occurrences, many=True)
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(request_body=OccurrenceSerializer)
+    def post(self, request, central_id):  # working
+        central = get_object_or_404(Team, pk=central_id)
+
+        data = request.data.copy()
+        data['central'] = central
+
+        serializer = OccurrenceSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            result = OccurrenceSerializer(serializer.instance)
+            return Response(data={"status": "OK", "message": result.data},
+                            status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # done
 class OccurrenceStateList(APIView):
     """List all States of an Occurrence"""
@@ -678,6 +708,20 @@ class VictimProcedureScale(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class HospitalVictimsList(APIView):
+    """List all Victims of an Hospital"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: VictimSerializer(many=True)})
+    def get(self, request, hospital_id):  # working
+        hospital = get_object_or_404(Hospital, pk=hospital_id)
+        victims = Victim.objects.filter(hospital=hospital)
+        serializer = VictimSerializer(victims, many=True)
+
+        return Response(serializer.data)
 
 
 class TypeOfTransportList(APIView):

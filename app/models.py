@@ -57,6 +57,7 @@ class Central(models.Model):
     address = models.CharField(max_length=50)
     area_of_action = models.CharField(max_length=50)
     contact = models.IntegerField()
+    is_administrative = models.BooleanField()
 
     def __str__(self):
         return self.designation
@@ -75,12 +76,18 @@ class Occurrence(models.Model):
     team = models.ForeignKey(
         Team,
         related_name="occurrences",
-        on_delete=models.RESTRICT
+        on_delete=models.RESTRICT,
+        blank=True,
+        null=True,
+
     )
     central = models.ForeignKey(
         Central,
         related_name="centrals",
-        on_delete=models.RESTRICT
+        on_delete=models.RESTRICT,
+        blank=True,
+        null=True,
+
     )
 
     def __str__(self):
@@ -190,7 +197,7 @@ class Victim(models.Model):
     risk_situation = models.CharField(max_length=50, null=True, blank=True)
     medical_followup = models.BooleanField()
     hospital_checkin_date = models.DateTimeField(max_length=100, null=True, blank=True)
-    episode_number = models.PositiveIntegerField()
+    episode_number = models.PositiveIntegerField(null=True, blank=True)
     comments = models.CharField(max_length=400, null=True, blank=True)
     type_of_emergency = models.CharField(max_length=100, null=True, blank=True)
     SIV_SAV = models.DateTimeField(null=True, blank=True)
@@ -214,7 +221,9 @@ class Victim(models.Model):
     hospital = models.ForeignKey(
         Hospital,
         on_delete=models.RESTRICT,
-        related_name='victim_hospital'
+        related_name='victim_hospital',
+        null=True,
+        blank=True
     )
 
     def __str__(self):
