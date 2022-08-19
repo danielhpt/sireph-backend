@@ -65,7 +65,7 @@ urlpatterns = [
          name="victim_procedure_circulation"),
     path('victims/<int:victim_id>/procedure_scale/', VictimProcedureScale.as_view(), name="victim_procedure_scale"),
     path('hospitals/', HospitalList.as_view(), name="hospital_list"),
-    path('hospitals/<int:hospital_id>/victims/', HospitalVictimsList.as_view(), name="hospital_victims_list"),
+    path('hospitals/victims/', HospitalVictimsList.as_view(), name="hospital_victims_list"),
     path('centrals/', CentralList.as_view(), name="central_list"),
-    path('centrals/<int:central_id>/occurrences/', CentralOccurrencesList.as_view(), name="central_occurrences_list"),
+    path('centrals/occurrences/', CentralOccurrencesList.as_view(), name="central_occurrences_list"),
 ]

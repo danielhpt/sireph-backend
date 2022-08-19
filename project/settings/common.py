@@ -99,13 +99,5 @@ REST_FRAMEWORK = {
     ),
 }
 
-SWAGGER_SETTINGS = {
-    "api_key": {
-        "type": "apiKey",
-        "name": "api_key",
-        "in": "header"
-    }
-}
-
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'

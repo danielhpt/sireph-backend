@@ -216,7 +216,9 @@ class Victim(models.Model):
     occurrence = models.ForeignKey(
         Occurrence,
         on_delete=models.RESTRICT,
-        related_name='victims'
+        related_name='victims',
+        null=True,
+        blank=True
     )
     hospital = models.ForeignKey(
         Hospital,

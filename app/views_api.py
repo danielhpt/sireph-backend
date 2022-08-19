@@ -321,7 +321,7 @@ class CentralOccurrencesList(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
-    def get(self, request, central_id):  # working
+    def get(self, request, central_id):
         central = get_object_or_404(Central, pk=central_id)
         occurrences = Occurrence.objects.filter(central=central)
         serializer = OccurrenceDetailSerializer(occurrences, many=True)
@@ -329,13 +329,8 @@ class CentralOccurrencesList(APIView):
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=OccurrenceDetailSerializer)
-    def post(self, request, central_id):  # working
-        central = get_object_or_404(Central, pk=central_id)
-
-        data = request.data.copy()
-        data['central'] = central
-
-        serializer = OccurrenceDetailSerializer(data=data)
+    def post(self, request):
+        serializer = OccurrenceDetailSerializer(data=request.data.copy())
 
         if serializer.is_valid():
             serializer.save()
@@ -344,6 +339,7 @@ class CentralOccurrencesList(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # done
 class OccurrenceStateList(APIView):
@@ -722,23 +718,6 @@ class HospitalVictimsList(APIView):
         serializer = VictimSerializer(victims, many=True)
 
         return Response(serializer.data)
-
-    @swagger_auto_schema(request_body=VictimSerializer)
-    def post(self, request, hospital_id):  # working
-        hospital = get_object_or_404(Hospital, pk=hospital_id)
-
-        data = request.data.copy()
-        data['hospital'] = hospital
-
-        serializer = VictimSerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            result = VictimSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
-                            status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TypeOfTransportList(APIView):

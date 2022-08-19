@@ -86,11 +86,12 @@ class HospitalStaffSerializer(serializers.ModelSerializer):
 
 class OccurrenceSerializer(serializers.ModelSerializer):
     team = TeamSerializer(read_only=True)
+    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'team']
+                  'parish', 'municipality', 'team', 'central']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -143,7 +144,6 @@ class OccurrenceDetailSerializer(serializers.ModelSerializer):
     victims = VictimSimplifiedSerializer(many=True, read_only=True)
     states = OccurrenceStateSerializer(many=True, read_only=True)
     team = TeamSerializer(read_only=True)
-    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
@@ -173,7 +173,6 @@ class VictimSerializer(serializers.ModelSerializer):
     type_of_transport = TypeOfTransportSerializer(read_only=True)
     non_transport_reason = NonTransportReasonSerializer(read_only=True)
     occurrence = OccurrenceSimplifiedSerializer(read_only=True)
-    hospital = HospitalSerializer(read_only=True)
 
     class Meta:
         model = Victim
@@ -398,7 +397,7 @@ class VictimDetailsSerializer(serializers.ModelSerializer):
                   'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
                   'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'evaluations',
                   'symptom', 'procedure_rcp', 'procedure_ventilation', 'procedure_protocol',
-                  'procedure_circulation', 'procedure_scale', 'pharmacies', 'SIV_SAV']
+                  'procedure_circulation', 'procedure_scale', 'pharmacies', 'SIV_SAV', 'hospital']
 
 
 class UserSerializer(serializers.ModelSerializer):
