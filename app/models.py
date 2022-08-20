@@ -105,6 +105,7 @@ class Occurrence(models.Model):
     municipality = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
     alert_mode = models.BooleanField(default=False)
+    created_on = models.DateTimeField(null=True, blank=True)
     team = models.ForeignKey(
         Team,
         related_name="occurrences",
