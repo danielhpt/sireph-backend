@@ -144,6 +144,7 @@ class OccurrenceDetailSerializer(serializers.ModelSerializer):
     victims = VictimSimplifiedSerializer(many=True, read_only=True)
     states = OccurrenceStateSerializer(many=True, read_only=True)
     team = TeamSerializer(read_only=True)
+    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
