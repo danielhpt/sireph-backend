@@ -826,10 +826,10 @@ class HospitalStaffList(APIView):
 
 
 class UserCreate(APIView):
-    """Create or Update a Django User"""
+    """Create or Update a SIREPH User"""  # On use by Alves
 
     @swagger_auto_schema(request_body=UserSerializer)
-    def post(self, request):
+    def post(self, request):  # working
         serializer = UserSerializer(data=request.data.copy())
         user = User.objects.filter(username=serializer.initial_data['username'])
 
@@ -844,3 +844,21 @@ class UserCreate(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VictimOccurrences(APIView):
+    """List all Occurrences of a Victim"""  # On use by Alves
+
+    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+    def get(self, request, user_id):  #
+        user = get_object_or_404(User, pk=user_id)
+        user = UserSerializer(data=user)
+        victims = Victim.objects.filter(identity_number=user.initial_data.username)
+        occurrences = []
+
+        for v in victims:
+            occurrences += Occurrence.objects.filter(victims=v)
+
+        serializer = OccurrenceSerializer(occurrences, many=True)
+
+        return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
