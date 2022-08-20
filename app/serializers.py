@@ -91,7 +91,7 @@ class OccurrenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'active', 'team', 'central']
+                  'parish', 'municipality', 'active', 'alert_mode', 'team', 'central']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
