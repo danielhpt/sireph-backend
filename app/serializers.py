@@ -85,8 +85,6 @@ class HospitalStaffSerializer(serializers.ModelSerializer):
 
 
 class OccurrenceSerializer(serializers.ModelSerializer):
-    team = TeamSerializer(read_only=True)
-    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
