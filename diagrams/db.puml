@@ -7,6 +7,52 @@ hide empty methods
 
 entity User {}
 
+entity Central {
+    *designation Text
+    *address Text
+    *area_of_action Text
+    *contact int
+    *is_administrative Boolean
+}
+
+entity Team {
+    *Central
+    *active Boolean
+}
+
+entity Technician {
+    *User
+    *Central
+    *active Boolean
+}
+
+entity TeamTechnician {
+    *Team
+    *Technician
+    *active Boolean
+    *team_leader Boolean
+}
+
+entity Dispatcher {
+    *User
+    *Central
+    *active Boolean
+}
+
+entity Hospital {
+    *name Text
+    *address Text
+    *capacity int
+    *current_capacity int
+    *contact int
+}
+
+entity HospitalStaff {
+    *User
+    *Hospital
+    *active Boolean
+}
+
 entity Occurrence {
     *occurrence_number int
     *entity Text
@@ -17,11 +63,21 @@ entity Occurrence {
     *parish Text
     *municipality Text
     *active Boolean
+    *alert_mode Boolean
     *Team
+    *Central
 }
 
-entity Team {
-    *team_leader User
+entity State {
+    *state Text
+}
+
+entity OccurrenceState {
+    *Occurrence
+    *State
+    *longitude float
+    *latitude float
+    *date_time DateTime
 }
 
 entity TypeOfTransport {
@@ -47,8 +103,7 @@ entity Victim {
     *usual_medication Text
     *risk_situation Text
     *medical_followup Boolean
-    *health_unit_origin Text
-    *health_unit_destination Text
+    *hospital_checkin_date DateTime
     *episode_number int
     *comments Text
     *type_of_emergency Text
@@ -56,18 +111,36 @@ entity Victim {
     *Type_Of_Transport
     *Non_Transport_Reason
     *Occurrence
+    *Hospital
 }
 
-entity State {
-    *state Text
+entity Evaluation {
+    *Victim
+    *hours DateTime
+    *AVDS int
+    *ventilation int
+    *SpO2 int
+    *O2_supply int
+    *EtCO2 int
+    *pulse int
+    *ecg Boolean
+    *skin Text
+    *temperature float
+    *systolic_blood_pressure int
+    *diastolic_blood_pressure int
+    *pupils Text
+    *pain int
+    *glycemia int
+    *NEWS int
 }
 
-entity OccurrenceState {
-    *Occurrence
-    *State
-    *longitude float
-    *latitude float
-    *date_time DateTime
+entity Pharmacy {
+    *Victim
+    *time Time
+    *pharmacy Text
+    *dose Text
+    *route Text
+    *adverse_effect Text
 }
 
 entity Symptom {
@@ -97,26 +170,6 @@ entity ProcedureVentilation {
     *laryngeal_mask Boolean
     *mechanical_ventilation Boolean
     *cpap Boolean
-}
-
-entity Evaluation {
-    *Victim
-    *hours DateTime
-    *AVDS int
-    *ventilation int
-    *SpO2 int
-    *O2_supply int
-    *EtCO2 int
-    *pulse int
-    *ecg Boolean
-    *skin Text
-    *temperature float
-    *systolic_blood_pressure int
-    *diastolic_blood_pressure int
-    *pupils Text
-    *pain int
-    *glycemia int
-    *NEWS int
 }
 
 entity ProcedureProtocol {
@@ -151,29 +204,21 @@ entity ProcedureScale {
     *RACE int
 }
 
-entity Pharmacy {
-    *Victim
-    *time Time
-    *pharmacy Text
-    *dose Text
-    *route Text
-    *adverse_effect Text
-}
-
-entity TeamTechnician {
-    *Team
-    *User
-    *active Boolean
-}
-
-User ||--|{ TeamTechnician
-TeamTechnician }|--|| Team
-Team ||--|{ Occurrence
-Team }|--|| User
+User ||--|| Technician
+User ||--|| Dispatcher
+User ||--|| HospitalStaff
+Central ||--|{ Team
+Central ||--|{ Technician
+Central ||--|{ Dispatcher
+Team ||--|{ TeamTechnician
+Technician ||--|{ TeamTechnician
+HospitalStaff }|--|| Hospital
+Occurrence }|--|| Team
+Occurrence }|--|| Central
+OccurrenceState }|--|| Occurrence
 OccurrenceState }|--|| State
-Occurrence ||--|{ OccurrenceState
 Occurrence ||--|{ Victim
-Victim ||--|{  Evaluation
+Victim ||--|{ Evaluation
 Victim ||--|{ Pharmacy
 Victim ||--|| ProcedureRCP
 Victim ||--|| ProcedureCirculation
@@ -183,5 +228,6 @@ Victim ||--|| ProcedureVentilation
 Victim ||--|| Symptom
 Victim }|--|| NonTransportReason
 Victim }|--|| TypeOfTransport
+Victim }|--|| Hospital
 
 @enduml
