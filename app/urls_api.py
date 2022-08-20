@@ -8,9 +8,9 @@ from .views_api import *
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title="SIREPH API",
         default_version='v1',
-        description="Test description",
+        description="External Service to Integrated Pre-Hospital Emergency Response System (SIREPH)",
     ),
     public=True,
     permission_classes=[permissions.AllowAny, ],
