@@ -97,7 +97,7 @@ class UserDetail(APIView):
 #         teams = Team.objects.filter(team_technicians__technician=user)
 #         serializer = TeamSerializer(teams, many=True)
 #
-#         return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
+#         return Response(data=serializer.data, status=status.HTTP_200_OK)
 #
 #     @swagger_auto_schema(request_body=TeamSerializer)
 #     def post(self, request, user_id):  # working todo maybe
@@ -106,7 +106,7 @@ class UserDetail(APIView):
 #         if serializer.is_valid():
 #             serializer.save()
 #             result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
-#             return Response(data={"status": "OK", "message": result.data},
+#             return Response(data=result.data,
 #                             status=status.HTTP_201_CREATED)
 #
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -215,7 +215,7 @@ class TeamList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -243,7 +243,7 @@ class TeamDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -275,7 +275,7 @@ class TeamOccurrencesList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = OccurrenceSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -354,7 +354,7 @@ class OccurrenceDetails(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
 
@@ -385,10 +385,10 @@ class OccurrenceVictimsList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = VictimSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
-        return Response(data={"status": "NOT OK", "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CentralOccurrencesList(APIView):
@@ -411,7 +411,7 @@ class CentralOccurrencesList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = OccurrenceDetailSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -443,7 +443,7 @@ class OccurrenceStateList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = OccurrenceStateSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -470,7 +470,7 @@ class VictimDetails(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -500,7 +500,7 @@ class VictimPharmacyList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = PharmacySerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -545,7 +545,7 @@ class VictimEvaluationList(APIView):
         if serializer.is_valid():
             serializer.save()
             result = EvaluationSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -582,7 +582,7 @@ class VictimSymptom(APIView):
         if serializer.is_valid():
             serializer.save()
             result = SymptomSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -596,7 +596,7 @@ class VictimSymptom(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -618,7 +618,7 @@ class VictimProcedureRCP(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureRCPSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -632,7 +632,7 @@ class VictimProcedureRCP(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -654,7 +654,7 @@ class VictimProcedureVentilation(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureVentilationSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -668,7 +668,7 @@ class VictimProcedureVentilation(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -690,7 +690,7 @@ class VictimProcedureProtocol(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureProtocolSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -704,7 +704,7 @@ class VictimProcedureProtocol(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -726,7 +726,7 @@ class VictimProcedureCirculation(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureCirculationSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -740,7 +740,7 @@ class VictimProcedureCirculation(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -762,7 +762,7 @@ class VictimProcedureScale(APIView):
         if serializer.is_valid():
             serializer.save()
             result = ProcedureScaleSerializer(serializer.instance)
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -776,7 +776,7 @@ class VictimProcedureScale(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(data={"status": "OK", "message": serializer.data},
+            return Response(data=serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -885,7 +885,7 @@ class DispatcherDetail(APIView):
         dispatchers = Dispatcher.objects.filter(dispatcher=user)
         serializer = DispatcherSerializer(dispatchers, many=True)
 
-        return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class HospitalStaffList(APIView):
@@ -910,16 +910,15 @@ class UserCreate(APIView):
         user = User.objects.filter(username=serializer.initial_data['username'])
 
         if user:
-            return Response(data={"status": "NOT OK", "message": "Utilizador já criado."},
-                            status=status.HTTP_226_IM_USED)
+            return Response(status=status.HTTP_226_IM_USED)
 
         if serializer.is_valid():
             serializer.save()
             result = UserSerializer(User.objects.get(pk=serializer.instance.id))
-            return Response(data={"status": "OK", "message": result.data},
+            return Response(data=result.data,
                             status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CentralActiveTechniciansList(APIView):
@@ -947,4 +946,4 @@ class VictimOccurrences(APIView):
 
         serializer = OccurrenceSerializer(occurrences, many=True)
 
-        return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
