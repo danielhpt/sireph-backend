@@ -7,13 +7,13 @@ from rest_framework import permissions
 from .views_api import *
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Snippets API",
-      default_version='v1',
-      description="Test description",
-   ),
+    openapi.Info(
+        title="Snippets API",
+        default_version='v1',
+        description="Test description",
+    ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=[permissions.AllowAny, ],
 )
 
 urlpatterns = [
@@ -26,22 +26,27 @@ urlpatterns = [
 
     path('user/', UserCreate.as_view()),
     path('user/<int:user_id>/dispatcher/', DispatcherDetail.as_view(), name="user_dispatcher_detail"),
-    path('user/', UserDetailByToken.as_view(), name="user_detail_by_token"),
+    path('user/by_token/', UserDetailByToken.as_view(), name="user_detail_by_token"),
     path('user/<int:user_id>/', UserInactive.as_view(), name="user_inactive"),
-    path('user/<int:user_id>/occurrence/', UserActiveOccurrence.as_view(), name="user_active_occurrence"),
+    # path('user/<int:user_id>/occurrence/', UserActiveOccurrence.as_view(), name="user_active_occurrence"),
 
     path('users/', UserList.as_view(), name="user_list"),  # admin only
     path('users/<int:user_id>/', UserDetail.as_view(), name="user_detail"),
-    path('users/<int:user_id>/teams/', UserTeamList.as_view(), name="user_team_list"),
+    # path('users/<int:user_id>/teams/', UserTeamList.as_view(), name="user_team_list"),
     path('users/dispatchers/', DispatcherList.as_view(), name="user_dispatcher_list"),
     path('users/employees/', HospitalStaffList.as_view(), name="user_employee_list"),
-    path('users/<int:user_id>/occurrences/', UserOccurrenceList.as_view(), name="user_occurrences_list"),
+    # path('users/<int:user_id>/occurrences/', UserOccurrenceList.as_view(), name="user_occurrences_list"),
 
     path('teams/', TeamList.as_view(), name="team_list"),  # admin only
     path('teams/<int:team_id>/', TeamDetail.as_view(), name="team_detail"),
     path('teams/<int:team_id>/occurrences/', TeamOccurrencesList.as_view(), name="team_occurrences_list"),
 
-    path('team/active/<int:user_id>/', UserTeamActive.as_view(), name="team_user_active"),
+    # path('team/active/<int:user_id>/', UserTeamActive.as_view(), name="team_user_active"),
+
+    path('technician/<int:technician_id>/occurrence/', TechnicianActiveOccurrence.as_view(), name="technician_active_occurrence"),
+    path('technician/<int:technician_id>/occurrences/', TechnicianOccurrenceList.as_view(), name="technician_occurrences_list"),
+    path('technician/<int:technician_id>/team/', TechnicianTeamActive.as_view(), name="technician_active_team"),
+    path('technician/by_token/', TechnicianDetailByToken.as_view(), name="technician_detail_by_token"),
 
     path('occurrences/', OccurrenceList.as_view(), name="occurrence_list"),  # admin only
     path('occurrences/<int:occurrence_id>/', OccurrenceDetails.as_view(), name="occurrence_detail"),
@@ -67,8 +72,10 @@ urlpatterns = [
 
     path('hospitals/', HospitalList.as_view(), name="hospital_list"),
     path('hospitals/victims/', HospitalVictimsList.as_view(), name="hospital_victims_list"),
+
     path('centrals/', CentralList.as_view(), name="central_list"),
     path('centrals/<int:central_id>/occurrences/', CentralOccurrencesList.as_view(), name="central_occurrences_list"),
+    path('centrals/<int:central_id>/technicians/', CentralActiveTechniciansList.as_view(), name="central_active_technicians_list"),
 
     path('victim/<int:user_id>/occurrences', VictimOccurrences.as_view(), name="victim_occurrences"),
 ]

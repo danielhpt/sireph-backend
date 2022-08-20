@@ -17,6 +17,10 @@ class UserAdmin(AuthUserAdmin):
     inlines = [TokenInline]
 
 
+class TechnicianAdmin(admin.ModelAdmin):
+    model = Technician
+
+
 class TeamTechnicianInline(admin.TabularInline):
     model = TeamTechnician
 
@@ -110,3 +114,4 @@ admin.site.register(Hospital, HospitalAdmin)
 admin.site.register(Central, CentralAdmin)
 admin.site.register(HospitalStaff, HospitalStaffAdmin)
 admin.site.register(Dispatcher, DispatcherAdmin)
+admin.site.register(Technician, TechnicianAdmin)

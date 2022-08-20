@@ -14,11 +14,53 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
+class Central(models.Model):
+    designation = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    area_of_action = models.CharField(max_length=50)
+    contact = models.IntegerField()
+    is_administrative = models.BooleanField()
+
+    def __str__(self):
+        return self.designation
+
+
 class Team(models.Model):
+    central = models.ForeignKey(
+        Central,
+        on_delete=models.RESTRICT,
+        related_name="central_team",
+        blank=True,
+        null=True,
+    )
+    active = models.BooleanField(default=True)
+
     def __str__(self):
         if self.team_technicians.filter(team_leader=True)[0]:
             return str(self.id) + ' - ' + self.team_technicians.filter(team_leader=True)[0].technician.get_username()
         return str(self.id)
+
+
+class Technician(models.Model):
+    technician = models.ForeignKey(
+        User,
+        on_delete=models.RESTRICT,
+        related_name='technician_user'
+    )
+    central = models.ForeignKey(
+        Central,
+        on_delete=models.RESTRICT,
+        related_name="central_technician"
+    )
+    active = models.BooleanField(default=True)
+
+    models.UniqueConstraint(
+        fields=['technician'],
+        name='uniqueUser'
+    )
+
+    def __str__(self):
+        return self.technician.get_username()
 
 
 class TeamTechnician(models.Model):
@@ -28,7 +70,7 @@ class TeamTechnician(models.Model):
         related_name="team_technicians"
     )
     technician = models.ForeignKey(
-        User,
+        Technician,
         on_delete=models.RESTRICT,
         related_name="technician_teams"
     )
@@ -49,18 +91,7 @@ class TeamTechnician(models.Model):
             team_leader = ' leader: 1'
         else:
             team_leader = ' leader: 0'
-        return str(self.team.id) + ' - ' + self.technician.get_username() + active + team_leader
-
-
-class Central(models.Model):
-    designation = models.CharField(max_length=50)
-    address = models.CharField(max_length=50)
-    area_of_action = models.CharField(max_length=50)
-    contact = models.IntegerField()
-    is_administrative = models.BooleanField()
-
-    def __str__(self):
-        return self.designation
+        return str(self.team.id) + ' - ' + self.technician.technician.get_username() + active + team_leader
 
 
 class Occurrence(models.Model):
@@ -70,7 +101,7 @@ class Occurrence(models.Model):
     motive = models.CharField(max_length=50)
     number_of_victims = models.IntegerField()
     local = models.CharField(max_length=100)
-    parish = models.CharField(max_length=50)
+    parish = models.CharField(max_length=50)  # freguesia
     municipality = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
     alert_mode = models.BooleanField(default=False)
@@ -80,7 +111,6 @@ class Occurrence(models.Model):
         on_delete=models.RESTRICT,
         blank=True,
         null=True,
-
     )
     central = models.ForeignKey(
         Central,
@@ -88,7 +118,6 @@ class Occurrence(models.Model):
         on_delete=models.RESTRICT,
         blank=True,
         null=True,
-
     )
 
     def __str__(self):

@@ -9,36 +9,64 @@ class UserSimplifiedSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'email']
 
 
+class CentralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Central
+        fields = ['id', 'designation', 'address', 'area_of_action', 'contact', 'is_administrative']
+
+
 class TechnicianSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    user = UserSimplifiedSerializer(source='technician')
+
+    class Meta:
+        model = Technician
+        fields = ['id', 'user', 'active']
+
+
+class TechnicianDetailSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    user = UserSimplifiedSerializer(source='technician')
+    central = CentralSerializer()
+
+    class Meta:
+        model = Technician
+        fields = ['id', 'user', 'active', 'central']
+
+
+class TeamTechnicianSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='technician.id')
-    username = serializers.ReadOnlyField(source='technician.username')
-    first_name = serializers.ReadOnlyField(source='technician.first_name')
-    last_name = serializers.ReadOnlyField(source='technician.last_name')
+    user = UserSimplifiedSerializer(source='technician.technician')
 
     class Meta:
         model = TeamTechnician
-        fields = ['id', 'username', 'first_name', 'last_name', 'active', 'team_leader']
+        fields = ['id', 'user', 'active', 'team_leader']
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    technicians = TechnicianSerializer(many=True, source='team_technicians')
+    technicians = TeamTechnicianSerializer(many=True, source='team_technicians')
+    central = CentralSerializer()
 
     class Meta:
         model = Team
-        fields = ['id', 'technicians']
+        fields = ['id', 'technicians', 'central', 'active']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
         technicians_data = validated_data.pop('technicians')
         team = Team.objects.create()
         for technician_data in technicians_data:
-            user = User.objects.get(pk=technician_data['id'])
+            technician = Technician.objects.get(pk=technician_data['id'])
             teamTechnician = TeamTechnician()
             teamTechnician.team = team
-            teamTechnician.technician = user
+            teamTechnician.technician = technician
             teamTechnician.active = technician_data['active']
             teamTechnician.team_leader = technician_data['team_leader']
+            if teamTechnician.team_leader:
+                team.central = technician.central
             teamTechnician.save()
+        if team.central is None:
+            team.central = Technician.objects.get(pk=technicians_data[0]['id']).central
         return team
 
     def update(self, instance, validated_data):
@@ -54,12 +82,6 @@ class TeamSerializer(serializers.ModelSerializer):
             ttOld.save()
 
         return instance
-
-
-class CentralSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Central
-        fields = ['id', 'designation', 'address', 'area_of_action', 'contact', 'is_administrative']
 
 
 class DispatcherSerializer(serializers.ModelSerializer):

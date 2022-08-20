@@ -15,9 +15,25 @@ class UserDetailByToken(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
+    @swagger_auto_schema(responses={200: UserSimplifiedSerializer()})
     def get(self, request):  # working
         serializer = UserSimplifiedSerializer(request.user)
+
+        return Response(serializer.data)
+
+
+class TechnicianDetailByToken(APIView):
+    """List the details of a Technician"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: TechnicianDetailSerializer()})
+    def get(self, request):  # working
+        try:
+            technician = Technician.objects.get(technician=request.user, active=True)
+        except Technician.DoesNotExist:
+            return HttpResponseNotFound()
+        serializer = TechnicianDetailSerializer(technician)
 
         return Response(serializer.data)
 
@@ -70,50 +86,77 @@ class UserDetail(APIView):
 
 
 # done
-class UserTeamList(APIView):
-    """List the teams of an User"""
+# class UserTeamList(APIView):
+#     """List the teams of an User"""
+#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
+#
+#     @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
+#     def get(self, request, user_id):  # working
+#         user = get_object_or_404(User, pk=user_id)
+#         teams = Team.objects.filter(team_technicians__technician=user)
+#         serializer = TeamSerializer(teams, many=True)
+#
+#         return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
+#
+#     @swagger_auto_schema(request_body=TeamSerializer)
+#     def post(self, request, user_id):  # working todo maybe
+#         serializer = TeamSerializer(data=request.data.copy())
+#
+#         if serializer.is_valid():
+#             serializer.save()
+#             result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
+#             return Response(data={"status": "OK", "message": result.data},
+#                             status=status.HTTP_201_CREATED)
+#
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class UserActiveOccurrence(APIView):
+#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
+#
+#     @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+#     def get(self, request, user_id):  # working
+#         user = get_object_or_404(User, pk=user_id)
+#         occurrences = Occurrence.objects.filter(team__team_technicians__technician=user, active=True)
+#
+#         if len(occurrences) > 0:
+#             serializer = OccurrenceSerializer(occurrences[0])
+#             return Response(serializer.data)
+#
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#
+#     def put(self, request, user_id):
+#         user = get_object_or_404(User, pk=user_id)
+#         occurrences = Occurrence.objects.filter(team__team_technicians__technician=user, active=True)
+#
+#         if len(occurrences) > 0:
+#             occurrences[0].active = False
+#             occurrences[0].save()
+#             return Response(status=status.HTTP_200_OK)
+#
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class TechnicianActiveOccurrence(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
-    def get(self, request, user_id):  # working
-        user = get_object_or_404(User, pk=user_id)
-        teams = Team.objects.filter(team_technicians__technician=user)
-        serializer = TeamSerializer(teams, many=True)
-
-        return Response(data={"status": "OK", "message": serializer.data}, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(request_body=TeamSerializer)
-    def post(self, request, user_id):  # working todo maybe
-        serializer = TeamSerializer(data=request.data.copy())
-
-        if serializer.is_valid():
-            serializer.save()
-            result = TeamSerializer(Team.objects.get(pk=serializer.instance.id))
-            return Response(data={"status": "OK", "message": result.data},
-                            status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UserActiveOccurrence(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
-    def get(self, request, user_id):  # working
-        user = get_object_or_404(User, pk=user_id)
-        occurrences = Occurrence.objects.filter(team__team_technicians__technician=user, active=True)
+    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    def get(self, request, technician_id):  # working
+        technician = get_object_or_404(Technician, pk=technician_id)
+        occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
 
         if len(occurrences) > 0:
-            serializer = OccurrenceSerializer(occurrences[0])
+            serializer = OccurrenceDetailSerializer(occurrences[0])
             return Response(serializer.data)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, user_id):
-        user = get_object_or_404(User, pk=user_id)
-        occurrences = Occurrence.objects.filter(team__team_technicians__technician=user, active=True)
+    def put(self, request, technician_id):
+        technician = get_object_or_404(Technician, pk=technician_id)
+        occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
 
         if len(occurrences) > 0:
             occurrences[0].active = False
@@ -124,16 +167,30 @@ class UserActiveOccurrence(APIView):
 
 
 # done
-class UserOccurrenceList(APIView):
-    """List the occurrences of an User"""
+# class UserOccurrenceList(APIView):
+#     """List the occurrences of an User"""
+#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
+#
+#     @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+#     def get(self, request, user_id):  # working
+#         user = get_object_or_404(User, pk=user_id)
+#         occurrences = Occurrence.objects.filter(team__team_technicians__technician=user)
+#         serializer = OccurrenceSerializer(occurrences, many=True)
+#
+#         return Response(serializer.data)
+
+
+class TechnicianOccurrenceList(APIView):
+    """List the occurrences of an Technician"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
-    def get(self, request, user_id):  # working
-        user = get_object_or_404(User, pk=user_id)
-        occurrences = Occurrence.objects.filter(team__team_technicians__technician=user)
-        serializer = OccurrenceSerializer(occurrences, many=True)
+    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    def get(self, request, technician_id):
+        technician = get_object_or_404(Technician, pk=technician_id)
+        occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician)
+        serializer = OccurrenceDetailSerializer(occurrences, many=True)
 
         return Response(serializer.data)
 
@@ -224,15 +281,34 @@ class TeamOccurrencesList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserTeamActive(APIView):
-    """List the active Team of an User"""
+# class UserTeamActive(APIView):
+#     """List the active Team of an User"""
+#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
+#
+#     @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
+#     def get(self, request, user_id):  # working
+#         user = get_object_or_404(User, pk=user_id)
+#         teams = Team.objects.filter(team_technicians__technician=user, team_technicians__active=True)
+#
+#         if len(teams) != 0:
+#             team = teams[0]
+#             serializer = TeamSerializer(team)
+#
+#             return Response(serializer.data)
+#
+#         return HttpResponseNotFound()
+
+
+class TechnicianTeamActive(APIView):
+    """List the active Team of a Technician"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
-    def get(self, request, user_id):  # working
-        user = get_object_or_404(User, pk=user_id)
-        teams = Team.objects.filter(team_technicians__technician=user, team_technicians__active=True)
+    def get(self, request, technician_id):  # working
+        technician = get_object_or_404(Technician, pk=technician_id)
+        teams = Team.objects.filter(team_technicians__technician=technician, team_technicians__active=True, active=True)
 
         if len(teams) != 0:
             team = teams[0]
@@ -271,7 +347,7 @@ class OccurrenceDetails(APIView):
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=OccurrenceDetailSerializer)
-    def put(self, request, occurrence_id):  # working
+    def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         data = request.data.copy()
         serializer = OccurrenceDetailSerializer(occurrence, data=data)
@@ -844,6 +920,16 @@ class UserCreate(APIView):
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CentralActiveTechniciansList(APIView):
+    """List the active Technicians of a Central"""
+    def get(self, request, central_id):
+        central = get_object_or_404(Central, pk=central_id)
+        technicians = Technician.objects.filter(central=central, active=True)
+        serializer = TechnicianSerializer(technicians, many=True)
+
+        return Response(serializer.data)
 
 
 class VictimOccurrences(APIView):
