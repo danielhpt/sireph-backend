@@ -78,4 +78,6 @@ urlpatterns = [
     path('centrals/<int:central_id>/technicians/', CentralActiveTechniciansList.as_view(), name="central_active_technicians_list"),
 
     path('victim/<int:user_id>/occurrences', VictimOccurrences.as_view(), name="victim_occurrences"),
+
+    path('news/', NewsList.as_view(), name="news_list"),
 ]

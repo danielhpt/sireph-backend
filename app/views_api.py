@@ -923,6 +923,7 @@ class UserCreate(APIView):
 
 class CentralActiveTechniciansList(APIView):
     """List the active Technicians of a Central"""
+
     def get(self, request, central_id):
         central = get_object_or_404(Central, pk=central_id)
         technicians = Technician.objects.filter(central=central, active=True)
@@ -947,3 +948,16 @@ class VictimOccurrences(APIView):
         serializer = OccurrenceDetailSerializer(occurrences, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class NewsList(APIView):
+    """List all News"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: NewsSerializer(many=True)})
+    def get(self, request):
+        news = New.objects.all()
+        serializer = NewsSerializer(news, many=True)
+
+        return Response(serializer.data)
