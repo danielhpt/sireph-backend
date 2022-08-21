@@ -107,7 +107,6 @@ class HospitalStaffSerializer(serializers.ModelSerializer):
 
 
 class OccurrenceSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
@@ -187,7 +186,7 @@ class NonTransportReasonSerializer(serializers.ModelSerializer):
 class HospitalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hospital
-        fields = ['id', 'name', 'address', 'capacity', 'current_capacity', 'contact']
+        fields = ['id', 'name', 'address', 'capacity', 'current_capacity', 'contact', 'image_url']
 
 
 class VictimSerializer(serializers.ModelSerializer):
@@ -440,3 +439,9 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'title', 'description', 'image_url']
