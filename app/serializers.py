@@ -130,7 +130,10 @@ class VictimIdSerializer(serializers.ModelSerializer):
 class VictimSimplifiedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Victim
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
+                  'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
+                  'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
+                  'type_of_emergency', 'hospital', 'SIV_SAV']
 
 
 class StateSerializer(serializers.ModelSerializer):

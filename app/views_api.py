@@ -934,7 +934,7 @@ class CentralActiveTechniciansList(APIView):
 class VictimOccurrences(APIView):
     """List all Occurrences of a Victim"""  # On use by Alves
 
-    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, user_id):  #
         user = get_object_or_404(User, pk=user_id)
         user = UserSerializer(data=user)
@@ -944,6 +944,6 @@ class VictimOccurrences(APIView):
         for v in victims:
             occurrences += Occurrence.objects.filter(victims=v)
 
-        serializer = OccurrenceSerializer(occurrences, many=True)
+        serializer = OccurrenceDetailSerializer(occurrences, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
