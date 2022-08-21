@@ -171,7 +171,7 @@ class OccurrenceDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'active', 'central', 'team', 'victims', 'states']
+                  'parish', 'municipality', 'active', 'alert_mode', 'central', 'team', 'victims', 'states']
 
 
 class TypeOfTransportSerializer(serializers.ModelSerializer):
