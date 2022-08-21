@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions
@@ -7,6 +8,17 @@ from rest_framework.views import APIView, Response, status
 from drf_yasg.utils import swagger_auto_schema
 
 from .serializers import *
+
+
+class UserLogout(APIView):
+    """User Logout"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        request.user.auth_token.delete()
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
 
 
 # done

@@ -25,6 +25,7 @@ urlpatterns = [
     path('token/', obtain_auth_token),
 
     path('user/', UserCreate.as_view()),
+    path('user/logout/', UserLogout.as_view(), name="user_logout"),
     path('user/<int:user_id>/dispatcher/', DispatcherDetail.as_view(), name="user_dispatcher_detail"),
     path('user/by_token/', UserDetailByToken.as_view(), name="user_detail_by_token"),
     path('user/<int:user_id>/', UserInactive.as_view(), name="user_inactive"),
