@@ -446,5 +446,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 class NewsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = News
         fields = ['id', 'title', 'description', 'image_url']

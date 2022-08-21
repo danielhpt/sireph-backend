@@ -103,7 +103,7 @@ class HospitalStaffAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    model = New
+    model = News
 
 
 admin.site.unregister(User)
@@ -119,4 +119,4 @@ admin.site.register(Central, CentralAdmin)
 admin.site.register(HospitalStaff, HospitalStaffAdmin)
 admin.site.register(Dispatcher, DispatcherAdmin)
 admin.site.register(Technician, TechnicianAdmin)
-admin.site.register(New)
+admin.site.register(News, NewsAdmin)

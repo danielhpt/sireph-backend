@@ -957,7 +957,7 @@ class NewsList(APIView):
 
     @swagger_auto_schema(responses={200: NewsSerializer(many=True)})
     def get(self, request):
-        news = New.objects.all()
+        news = News.objects.all()
         serializer = NewsSerializer(news, many=True)
 
         return Response(serializer.data)
