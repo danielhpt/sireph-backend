@@ -1,22 +1,101 @@
+import coreapi
+import coreschema
 from django.contrib.auth import logout
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.models import User as User_Auth
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
 from rest_framework import permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.schemas import ManualSchema
+from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.views import APIView, Response, status
 from drf_yasg.utils import swagger_auto_schema
 
 from .serializers import *
 
 
-class UserLogout(APIView):
+class Login(APIView):
+    """User Login"""
+    permission_classes = [AllowAny]
+
+    login_schema = openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'username': openapi.Schema(type=openapi.TYPE_STRING),
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=['username', 'password']
+    )
+    login_schema_response = {
+        status.HTTP_200_OK: openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'token': openapi.Schema(type=openapi.TYPE_STRING),
+                "user": openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                        'username': openapi.Schema(type=openapi.TYPE_STRING),
+                        'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                        'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                        'email': openapi.Schema(type=openapi.TYPE_STRING)
+                    }
+                ),
+                "is_technician": openapi.Schema(type=openapi.TYPE_BOOLEAN),
+                "is_dispatcher": openapi.Schema(type=openapi.TYPE_BOOLEAN),
+                "is_hospitalstaff": openapi.Schema(type=openapi.TYPE_BOOLEAN)
+            }
+        )
+    }
+
+    @swagger_auto_schema(request_body=login_schema, responses=login_schema_response)
+    def post(self, request):
+        username = request.data["username"]
+        password = request.data["password"]
+        user = get_object_or_404(User, username=username)
+        if not check_password(password, user.password):
+            return ValidationError()
+        else:
+            token = Token.objects.get_or_create(user=user)[0].key
+            try:
+                Technician.objects.get(technician=user)
+                is_technician = True
+            except Technician.DoesNotExist:
+                is_technician = False
+            try:
+                Dispatcher.objects.get(dispatcher=user)
+                is_dispatcher = True
+            except Dispatcher.DoesNotExist:
+                is_dispatcher = False
+            try:
+                HospitalStaff.objects.get(employee=user)
+                is_hospitalstaff = True
+            except HospitalStaff.DoesNotExist:
+                is_hospitalstaff = False
+            data = {
+                "token": token,
+                "user": UserSimplifiedSerializer(user).data,
+                "is_technician": is_technician,
+                "is_dispatcher": is_dispatcher,
+                "is_hospitalstaff": is_hospitalstaff
+            }
+            return Response(status=status.HTTP_200_OK, data=data)
+
+
+class Logout(APIView):
     """User Logout"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        request.user.auth_token.delete()
+        try:
+            request.user.auth_token.delete()
+        except User_Auth.auth_token.RelatedObjectDoesNotExist:
+            pass
         logout(request)
         return Response(status=status.HTTP_200_OK)
 

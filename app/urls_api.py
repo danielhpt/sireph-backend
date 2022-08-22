@@ -22,10 +22,10 @@ urlpatterns = [
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
-    path('token/', obtain_auth_token),
+    path('login/', Login.as_view(), name="login"),
+    path('logout/', Logout.as_view(), name="logout"),
 
     path('user/', UserCreate.as_view()),
-    path('user/logout/', UserLogout.as_view(), name="user_logout"),
     path('user/<int:user_id>/dispatcher/', DispatcherDetail.as_view(), name="user_dispatcher_detail"),
     path('user/by_token/', UserDetailByToken.as_view(), name="user_detail_by_token"),
     path('user/<int:user_id>/', UserInactive.as_view(), name="user_inactive"),
