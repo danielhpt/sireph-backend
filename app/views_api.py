@@ -1,6 +1,6 @@
 import coreapi
 import coreschema
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User as User_Auth
 from django.http import HttpResponseNotFound
@@ -60,6 +60,7 @@ class Login(APIView):
         if not check_password(password, user.password):
             return ValidationError()
         else:
+            login(request, user)
             token = Token.objects.get_or_create(user=user)[0].key
             try:
                 Technician.objects.get(technician=user)
