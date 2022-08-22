@@ -92,7 +92,7 @@ class Logout(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request):# todo sem swagger?
         try:
             request.user.auth_token.delete()
         except User_Auth.auth_token.RelatedObjectDoesNotExist:
@@ -106,8 +106,9 @@ class UserDetailByToken(APIView):
     """List the details of an User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: UserSimplifiedSerializer()})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: UserSimplifiedSerializer()})
     def get(self, request):  # working
         serializer = UserSimplifiedSerializer(request.user)
 
@@ -118,8 +119,9 @@ class TechnicianDetailByToken(APIView):
     """List the details of a Technician"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: TechnicianDetailSerializer()})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: TechnicianDetailSerializer()})
     def get(self, request):  # working
         try:
             technician = Technician.objects.get(technician=request.user, active=True)
@@ -135,8 +137,9 @@ class UserInactive(APIView):
     """List the details of an User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         actives = TeamTechnician.objects.filter(technician=user, active=True)
@@ -154,8 +157,9 @@ class UserList(APIView):
     """List all Users"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAdminUser]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request):  # working
         users = User.objects.all()
         serializer = UserSimplifiedSerializer(users, many=True)
@@ -168,8 +172,9 @@ class UserDetail(APIView):
     """List the details of an User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: UserSimplifiedSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: UserSimplifiedSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         serializer = UserSimplifiedSerializer(user)
@@ -234,8 +239,9 @@ class UserDetail(APIView):
 class TechnicianActiveOccurrence(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, technician_id):  # working
         technician = get_object_or_404(Technician, pk=technician_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
@@ -246,7 +252,7 @@ class TechnicianActiveOccurrence(APIView):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, technician_id):
+    def put(self, request, technician_id): # todo sem swagger?
         technician = get_object_or_404(Technician, pk=technician_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
 
@@ -277,8 +283,9 @@ class TechnicianOccurrenceList(APIView):
     """List the occurrences of an Technician"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, technician_id):
         technician = get_object_or_404(Technician, pk=technician_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician)
@@ -292,15 +299,16 @@ class TeamList(APIView):
     """List all Teams"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAdminUser]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
     def get(self, request):  # working
         teams = Team.objects.all()
         serializer = TeamSerializer(teams, many=True)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=TeamSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=TeamSerializer)
     def post(self, request):  # working
         serializer = TeamSerializer(data=request.data.copy())
 
@@ -318,15 +326,16 @@ class TeamDetail(APIView):
     """List the details of a Team"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
     def get(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
         serializer = TeamSerializer(team)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=TeamSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=TeamSerializer)
     def put(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
         data = request.data.copy()
@@ -346,8 +355,9 @@ class TeamOccurrencesList(APIView):
     """List all Occurrences for a specific Team"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceSerializer(many=True)})
     def get(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
         occurrence = Occurrence.objects.filter(team=team)
@@ -355,7 +365,7 @@ class TeamOccurrencesList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=OccurrenceSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceSerializer)
     def post(self, request, team_id):  # working
         team = get_object_or_404(Team, pk=team_id)
 
@@ -396,8 +406,9 @@ class TechnicianTeamActive(APIView):
     """List the active Team of a Technician"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: TeamSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
     def get(self, request, technician_id):  # working
         technician = get_object_or_404(Technician, pk=technician_id)
         teams = Team.objects.filter(team_technicians__technician=technician, team_technicians__active=True, active=True)
@@ -416,8 +427,9 @@ class OccurrenceList(APIView):
     """List all Occurrences"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceSerializer(many=True)})
     def get(self, request):  # working
         occurrences = Occurrence.objects.all()
         serializer = OccurrenceSerializer(occurrences, many=True)
@@ -430,15 +442,16 @@ class OccurrenceDetails(APIView):
     """List the details of an Occurrence"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         serializer = OccurrenceDetailSerializer(occurrence)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=OccurrenceDetailSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceDetailSerializer)
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         data = request.data.copy()
@@ -455,8 +468,9 @@ class OccurrenceVictimsList(APIView):
     """List all victims of an Occurrence"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: VictimSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: VictimSerializer(many=True)})
     def get(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         victims = Victim.objects.filter(occurrence=occurrence)
@@ -464,7 +478,7 @@ class OccurrenceVictimsList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=VictimSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=VictimSerializer)
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
 
@@ -487,8 +501,9 @@ class CentralOccurrencesList(APIView):
     """List all Occurrences of a Central"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, central_id):
         central = get_object_or_404(Central, pk=central_id)
         occurrences = Occurrence.objects.filter(central=central)
@@ -496,7 +511,7 @@ class CentralOccurrencesList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=OccurrenceDetailSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceDetailSerializer)
     def post(self, request):
         serializer = OccurrenceDetailSerializer(data=request.data.copy())
 
@@ -514,8 +529,9 @@ class OccurrenceStateList(APIView):
     """List all States of an Occurrence"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceStateSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceStateSerializer(many=True)})
     def get(self, request, occurrence_id):  # working
         occurrence = Occurrence.objects.get(pk=occurrence_id)
         occurrence_states = OccurrenceState.objects.filter(occurrence=occurrence)
@@ -523,7 +539,7 @@ class OccurrenceStateList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=OccurrenceStateSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceStateSerializer)
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         data = request.data.copy()
@@ -546,15 +562,16 @@ class VictimDetails(APIView):
     """List the details of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: VictimDetailsSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: VictimDetailsSerializer(many=True)})
     def get(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         serializer = VictimDetailsSerializer(victim)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=VictimDetailsSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=VictimDetailsSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -573,8 +590,9 @@ class VictimPharmacyList(APIView):
     """List the pharmacies of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: PharmacySerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: PharmacySerializer(many=True)})
     def get(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         pharmacies = Pharmacy.objects.filter(victim=victim)
@@ -582,7 +600,7 @@ class VictimPharmacyList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=PharmacyDetailSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=PharmacyDetailSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -603,8 +621,9 @@ class VictimPharmacyDetail(APIView):
     """List the details of a pharmacies of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: PharmacySerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: PharmacySerializer(many=True)})
     def get(self, request, victim_id, pharmacy_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         pharmacy = get_object_or_404(Pharmacy, pk=pharmacy_id, victim=victim)
@@ -618,8 +637,9 @@ class VictimEvaluationList(APIView):
     """List the evaluations of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: EvaluationSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: EvaluationSerializer(many=True)})
     def get(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         evaluations = Evaluation.objects.filter(victim=victim)
@@ -627,7 +647,7 @@ class VictimEvaluationList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=EvaluationDetailSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=EvaluationDetailSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -648,8 +668,9 @@ class VictimEvaluationDetail(APIView):
     """List the details of an evaluation of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: EvaluationSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: EvaluationSerializer(many=True)})
     def get(self, request, victim_id, evaluation_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         evaluation = get_object_or_404(Evaluation, pk=evaluation_id, victim=victim)
@@ -663,8 +684,9 @@ class VictimSymptom(APIView):
     """List the Symptons of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(request_body=SymptomSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=SymptomSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -679,7 +701,7 @@ class VictimSymptom(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=SymptomSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=SymptomSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         symptom = get_object_or_404(Symptom, pk=victim)
@@ -699,8 +721,9 @@ class VictimProcedureRCP(APIView):
     """List the RCP Procedures of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(request_body=ProcedureRCPSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureRCPSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -715,7 +738,7 @@ class VictimProcedureRCP(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=ProcedureRCPSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureRCPSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureRCP = get_object_or_404(ProcedureRCP, pk=victim)
@@ -735,8 +758,9 @@ class VictimProcedureVentilation(APIView):
     """List the Ventilation Procedures of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(request_body=ProcedureVentilationSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureVentilationSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -751,7 +775,7 @@ class VictimProcedureVentilation(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=ProcedureVentilationSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureVentilationSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureVentilation = get_object_or_404(ProcedureVentilation, pk=victim)
@@ -771,8 +795,9 @@ class VictimProcedureProtocol(APIView):
     """List the Protocol Procedures of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(request_body=ProcedureProtocolSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureProtocolSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -787,7 +812,7 @@ class VictimProcedureProtocol(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=ProcedureProtocolSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureProtocolSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureProtocol = get_object_or_404(ProcedureProtocol, pk=victim)
@@ -807,8 +832,9 @@ class VictimProcedureCirculation(APIView):
     """List the Circulation Procedures of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(request_body=ProcedureCirculationSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureCirculationSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -823,7 +849,7 @@ class VictimProcedureCirculation(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=ProcedureCirculationSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureCirculationSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureCirculation = get_object_or_404(ProcedureCirculation, pk=victim)
@@ -843,8 +869,9 @@ class VictimProcedureScale(APIView):
     """List the Scale Procedures of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(request_body=ProcedureScaleSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureScaleSerializer)
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
@@ -859,7 +886,7 @@ class VictimProcedureScale(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=ProcedureScaleSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=ProcedureScaleSerializer)
     def put(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureScale = get_object_or_404(ProcedureScale, pk=victim)
@@ -878,8 +905,9 @@ class HospitalVictimsList(APIView):
     """List all Victims of an Hospital"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: VictimSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: VictimSerializer(many=True)})
     def get(self, request, hospital_id):  # working
         hospital = get_object_or_404(Hospital, pk=hospital_id)
         victims = Victim.objects.filter(hospital=hospital)
@@ -892,8 +920,9 @@ class TypeOfTransportList(APIView):
     """List all Type of transports"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: TypeOfTransportSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: TypeOfTransportSerializer(many=True)})
     def get(self, request):
         transports_type = TypeOfTransport.objects.all()
         serializer = TypeOfTransportSerializer(transports_type, many=True)
@@ -905,8 +934,9 @@ class NonTransportReasonList(APIView):
     """List all non transport reasons"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: NonTransportReasonSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: NonTransportReasonSerializer(many=True)})
     def get(self, request):
         non_transport_reason = NonTransportReason.objects.all()
         serializer = NonTransportReasonSerializer(non_transport_reason)
@@ -918,8 +948,9 @@ class StateList(APIView):
     """List all States"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: StateSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: StateSerializer(many=True)})
     def get(self, request):
         states = State.objects.all()
         serializer = StateSerializer(states, many=True)
@@ -931,8 +962,9 @@ class HospitalList(APIView):
     """List all Hospitals"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: HospitalSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: HospitalSerializer(many=True)})
     def get(self, request):
         hospitals = Hospital.objects.all()
         serializer = HospitalSerializer(hospitals, many=True)
@@ -944,8 +976,9 @@ class CentralList(APIView):
     """List all Emergency Stations"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: CentralSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: CentralSerializer(many=True)})
     def get(self, request):
         centrals = Central.objects.all()
         serializer = CentralSerializer(centrals, many=True)
@@ -957,8 +990,9 @@ class DispatcherList(APIView):
     """List all Dispatchers"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: DispatcherSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: DispatcherSerializer(many=True)})
     def get(self, request):
         dispatchers = Dispatcher.objects.all()
         serializer = DispatcherSerializer(dispatchers, many=True)
@@ -970,8 +1004,9 @@ class DispatcherDetail(APIView):
     """List a specific User that is a Dispatcher"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: DispatcherSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: DispatcherSerializer(many=True)})
     def get(self, request, user_id):  # working
         user = get_object_or_404(User, pk=user_id)
         dispatchers = Dispatcher.objects.filter(dispatcher=user)
@@ -984,8 +1019,9 @@ class HospitalStaffList(APIView):
     """List all Hospital Staff Users"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: HospitalStaffSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: HospitalStaffSerializer(many=True)})
     def get(self, request):
         employees = HospitalStaff.objects.all()
         serializer = HospitalStaffSerializer(employees, many=True)
@@ -1015,8 +1051,10 @@ class UserCreate(APIView):
 
 class CentralActiveTechniciansList(APIView):
     """List the active Technicians of a Central"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, central_id):
+    def get(self, request, central_id): #todo sem swagger?
         central = get_object_or_404(Central, pk=central_id)
         technicians = Technician.objects.filter(central=central, active=True)
         serializer = TechnicianSerializer(technicians, many=True)
@@ -1026,8 +1064,11 @@ class CentralActiveTechniciansList(APIView):
 
 class VictimOccurrences(APIView):
     """List all Occurrences of a Victim"""  # On use by Alves
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, user_id):  #
         user = get_object_or_404(User, pk=user_id)
         user = UserSerializer(data=user)
@@ -1046,8 +1087,9 @@ class NewsList(APIView):
     """List all News"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(responses={200: NewsSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: NewsSerializer(many=True)})
     def get(self, request):
         news = News.objects.all()
         serializer = NewsSerializer(news, many=True)
