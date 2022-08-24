@@ -558,6 +558,22 @@ class OccurrenceStateList(APIView):
 
 
 # done
+
+class VictimList(APIView):
+    """List all Victims"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceSerializer(many=True)})
+    def get(self, request):  # working
+        victims = Victim.objects.all()
+        serializer = VictimSerializer(victims, many=True)
+
+        return Response(serializer.data)
+
+
+
 class VictimDetails(APIView):
     """List the details of a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]

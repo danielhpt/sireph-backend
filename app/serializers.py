@@ -196,6 +196,7 @@ class VictimSerializer(serializers.ModelSerializer):
     type_of_transport = TypeOfTransportSerializer(read_only=True)
     non_transport_reason = NonTransportReasonSerializer(read_only=True)
     occurrence = OccurrenceSimplifiedSerializer(read_only=True)
+    hospital = HospitalSerializer(read_only=True)
 
     class Meta:
         model = Victim
