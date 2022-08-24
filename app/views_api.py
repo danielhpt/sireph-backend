@@ -298,7 +298,7 @@ class TechnicianOccurrenceList(APIView):
 class TeamList(APIView):
     """List all Teams"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated] #Alteração
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
