@@ -35,10 +35,10 @@ class Team(models.Model):
     )
     active = models.BooleanField(default=True)
 
-    def __str__(self):
-        if self.team_technicians.filter(team_leader=True)[0]:
-            return str(self.id) + ' - ' + self.team_technicians.filter(team_leader=True)[0].technician.get_username()
-        return str(self.id)
+    # def __str__(self):
+    # if self.team_technicians.filter(team_leader=True)[0]:
+    #    return str(self.id) + ' - ' + self.team_technicians.filter(team_leader=True)[0].technician.get_username()
+    # return str(self.id)
 
 
 class Technician(models.Model):

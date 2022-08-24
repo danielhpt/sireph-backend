@@ -32,8 +32,8 @@ urlpatterns = [
     # path('user/<int:user_id>/occurrence/', UserActiveOccurrence.as_view(), name="user_active_occurrence"),
 
     path('users/', UserList.as_view(), name="user_list"),  # admin only
-    path('users/<int:user_id>/', UserDetail.as_view(), name="user_detail"),
-    # path('users/<int:user_id>/teams/', UserTeamList.as_view(), name="user_team_list"),
+    #path('users/<int:user_id>/', UserDetail.as_view(), name="user_detail"),
+    path('users/<int:user_id>/teams/', UserTeamList.as_view(), name="user_team_list"),
     path('users/dispatchers/', DispatcherList.as_view(), name="user_dispatcher_list"),
     path('users/employees/', HospitalStaffList.as_view(), name="user_employee_list"),
     # path('users/<int:user_id>/occurrences/', UserOccurrenceList.as_view(), name="user_occurrences_list"),
