@@ -565,13 +565,12 @@ class VictimList(APIView):
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: VictimSerializer(many=True)})
     def get(self, request):  # working
         victims = Victim.objects.all()
         serializer = VictimSerializer(victims, many=True)
 
         return Response(serializer.data)
-
 
 
 class VictimDetails(APIView):
