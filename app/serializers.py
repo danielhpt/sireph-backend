@@ -133,7 +133,7 @@ class VictimSimplifiedSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
                   'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
                   'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
-                  'type_of_emergency', 'hospital', 'SIV_SAV']
+                  'type_of_emergency', 'hospital']
 
 
 class StateSerializer(serializers.ModelSerializer):
@@ -422,7 +422,7 @@ class VictimDetailsSerializer(serializers.ModelSerializer):
                   'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
                   'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'evaluations',
                   'symptom', 'procedure_rcp', 'procedure_ventilation', 'procedure_protocol',
-                  'procedure_circulation', 'procedure_scale', 'pharmacies', 'SIV_SAV', 'hospital']
+                  'procedure_circulation', 'procedure_scale', 'pharmacies', 'hospital']
 
 
 class UserSerializer(serializers.ModelSerializer):

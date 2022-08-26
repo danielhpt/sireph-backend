@@ -232,7 +232,6 @@ class Victim(models.Model):
     episode_number = models.PositiveIntegerField(null=True, blank=True)
     comments = models.CharField(max_length=400, null=True, blank=True)
     type_of_emergency = models.CharField(max_length=100, null=True, blank=True)
-    SIV_SAV = models.DateTimeField(null=True, blank=True)
     type_of_transport = models.ForeignKey(
         TypeOfTransport,
         on_delete=models.RESTRICT,
@@ -364,8 +363,8 @@ class Symptom(models.Model):
 
 class ProcedureRCP(models.Model):
     witnessed = models.BooleanField(default=False)
-    SBV_DAE = models.DateTimeField(null=True, blank=True, default=datetime.now)
-    SIV_SAV = models.DateTimeField(null=True, blank=True, default=datetime.now)
+    SBV_DAE = models.DateTimeField(null=True, blank=True)
+    SIV_SAV = models.DateTimeField(null=True, blank=True)
     first_rhythm = models.CharField(max_length=25, null=True, blank=True)
     nr_shocks = models.PositiveIntegerField(null=True, blank=True)
     recovery = models.DateTimeField(null=True, blank=True)
