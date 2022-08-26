@@ -203,7 +203,7 @@ class VictimSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
                   'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
                   'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
-                  'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'hospital', 'SIV_SAV']
+                  'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'hospital']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data

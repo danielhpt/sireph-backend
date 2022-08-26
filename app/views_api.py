@@ -298,7 +298,7 @@ class TechnicianOccurrenceList(APIView):
 class TeamList(APIView):
     """List all Teams"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated] #Alteração
+    permission_classes = [IsAuthenticated]  # Alteração
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
@@ -582,6 +582,7 @@ class VictimList(APIView):
     #                         status=status.HTTP_201_CREATED)
     #
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class VictimDetails(APIView):
     """List the details of a Victim"""
