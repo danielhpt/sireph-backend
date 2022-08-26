@@ -328,7 +328,7 @@ class SymptomSerializer(serializers.ModelSerializer):
 class ProcedureRCPSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureRCP
-        fields = ['witnessed', 'SBV_DAE', 'first_rhythm', 'nr_shocks', 'recovery', 'downtime',
+        fields = ['witnessed', 'SBV_DAE', 'SIV_SAV', 'first_rhythm', 'nr_shocks', 'recovery', 'downtime',
                   'mechanical_compressions', 'performed']
 
     def create(self, validated_data):
@@ -339,6 +339,7 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.witnessed = validated_data.get('witnessed', instance.witnessed)
         instance.SBV_DAE = validated_data.get('SBV_DAE', instance.SBV_DAE)
+        instance.SIV_SAV = validated_data.get('SIV_SAV', instance.SIV_SAV)
         instance.first_rhythm = validated_data.get('first_rhythm', instance.first_rhythm)
         instance.nr_shocks = validated_data.get('nr_shocks', instance.nr_shocks)
         instance.recovery = validated_data.get('recovery', instance.recovery)

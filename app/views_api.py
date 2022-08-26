@@ -572,6 +572,16 @@ class VictimList(APIView):
 
         return Response(serializer.data)
 
+    # def post(self, request):
+    #     serializer = VictimSerializer(data=request.data.copy())
+    #
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         result = VictimSerializer(Victim.objects.get(pk=serializer.instance.id))
+    #         return Response(data=result.data,
+    #                         status=status.HTTP_201_CREATED)
+    #
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VictimDetails(APIView):
     """List the details of a Victim"""
@@ -923,7 +933,7 @@ class HospitalVictimsList(APIView):
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[auth], responses={200: VictimSerializer(many=True)})
-    def get(self, request, hospital_id):  # working
+    def get(self, request, hospital_id):
         hospital = get_object_or_404(Hospital, pk=hospital_id)
         victims = Victim.objects.filter(hospital=hospital)
         serializer = VictimSerializer(victims, many=True)
