@@ -1168,6 +1168,7 @@ class OccurrenceObject(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class EvaluationObject(APIView):
     """Create or Update an Evaluation"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
@@ -1182,6 +1183,29 @@ class EvaluationObject(APIView):
             serializer = EvaluationSerializer(evaluation, data=data)
         else:
             serializer = EvaluationSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PharmacyObject(APIView):
+    """Create or Update a Pharmacy"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[auth], request_body=PharmacySerializer)
+    def post(self, request):
+        data = request.data.copy()
+        if data['id']:
+            pharmacy = Pharmacy.objects.get(pk=data['id'])
+            serializer = PharmacySerializer(pharmacy, data=data)
+        else:
+            serializer = PharmacySerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()

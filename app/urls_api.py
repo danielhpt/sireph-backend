@@ -83,6 +83,7 @@ urlpatterns = [
     path('victim/', VictimObject.as_view(), name="victim_create"),
     path('occurrence/', OccurrenceObject.as_view(), name="occurrence_create"),
     path('evaluation/', EvaluationObject.as_view(), name="evaluation_create"),
+    path('pharmacy/', PharmacyObject.as_view(), name="pharmacy_create"),
 
     path('news/', NewsList.as_view(), name="news_list"),
 ]

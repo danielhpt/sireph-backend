@@ -112,13 +112,14 @@ class OccurrenceSerializer(serializers.ModelSerializer):
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
                   'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'team', 'central']
 
-  #  def create(self, validated_data):
-  #      validated_data = self.data.serializer.initial_data
-  #      del validated_data['id']
-  #      del validated_data['states']
-  #      del validated_data['victims']
-  #      occurrence = Occurrence.objects.create(**validated_data)
-  #      return occurrence
+
+#  def create(self, validated_data):
+#      validated_data = self.data.serializer.initial_data
+#      del validated_data['id']
+#      del validated_data['states']
+#      del validated_data['victims']
+#      occurrence = Occurrence.objects.create(**validated_data)
+#      return occurrence
 
 
 class VictimIdSerializer(serializers.ModelSerializer):
@@ -213,7 +214,7 @@ class OccurrenceDetailSerializer(serializers.ModelSerializer):
 class PharmacySerializer(serializers.ModelSerializer):
     class Meta:
         model = Pharmacy
-        fields = ['id', 'time', 'pharmacy', 'dose', 'route', 'adverse_effect']
+        fields = ['id', 'time', 'pharmacy', 'dose', 'route', 'adverse_effect', 'victim']
 
 
 class PharmacyDetailSerializer(serializers.ModelSerializer):
@@ -223,17 +224,11 @@ class PharmacyDetailSerializer(serializers.ModelSerializer):
         model = Pharmacy
         fields = ['id', 'time', 'pharmacy', 'dose', 'route', 'adverse_effect', 'victim']
 
-    def create(self, validated_data):
-        validated_data = self.data.serializer.initial_data
-        del validated_data['id']
-        pharmacy = Pharmacy.objects.create(**validated_data)
-        return pharmacy
-
 
 class ProcedureScaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureScale
-        fields = ['cincinatti', 'PROACS', 'RTS', 'MGAP', 'RACE']
+        fields = ['cincinatti', 'PROACS', 'RTS', 'MGAP', 'RACE', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -256,7 +251,7 @@ class ProcedureCirculationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureCirculation
         fields = ['temperature_monitoring', 'compression', 'tourniquet', 'pelvic_belt', 'venous_access', 'patch',
-                  'ecg']
+                  'ecg', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -278,7 +273,6 @@ class ProcedureCirculationSerializer(serializers.ModelSerializer):
 
 
 class EvaluationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Evaluation
         fields = ['id', 'hours', 'avds', 'ventilation', 'spo2', 'o2', 'etco2', 'pulse', 'ecg', 'skin', 'temperature',
@@ -303,7 +297,7 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
 class SymptomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Symptom
-        fields = ['comments', 'image_path']
+        fields = ['comments', 'image_path', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -322,7 +316,7 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureRCP
         fields = ['witnessed', 'SBV_DAE', 'SIV_SAV', 'first_rhythm', 'nr_shocks', 'recovery', 'downtime',
-                  'mechanical_compressions', 'performed']
+                  'mechanical_compressions', 'performed', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -349,7 +343,7 @@ class ProcedureVentilationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureVentilation
         fields = ['clearance', 'oropharyngeal', 'laryngeal_tube', 'endotracheal', 'laryngeal_mask',
-                  'mechanical_ventilation', 'cpap']
+                  'mechanical_ventilation', 'cpap', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -373,7 +367,8 @@ class ProcedureVentilationSerializer(serializers.ModelSerializer):
 class ProcedureProtocolSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureProtocol
-        fields = ['immobilization', 'TEPH', 'SIV', 'VV_AVC', 'VV_coronary', 'VV_sepsis', 'VV_trauma', 'VV_PCR']
+        fields = ['immobilization', 'TEPH', 'SIV', 'VV_AVC', 'VV_coronary', 'VV_sepsis', 'VV_trauma', 'VV_PCR',
+                  'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
