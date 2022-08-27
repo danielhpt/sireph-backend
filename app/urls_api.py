@@ -81,6 +81,7 @@ urlpatterns = [
 
     path('victim/<int:user_id>/occurrences', VictimOccurrences.as_view(), name="victim_occurrences"),
     path('victim/', VictimObject.as_view(), name="victim_create"),
+    path('occurrence/', OccurrenceObject.as_view(), name="occurrence_create"),
 
     path('news/', NewsList.as_view(), name="news_list"),
 ]

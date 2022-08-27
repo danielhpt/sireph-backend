@@ -451,7 +451,7 @@ class OccurrenceDetails(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceDetailSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceDetailSerializer(many=False))
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         data = request.data.copy()
@@ -1122,8 +1122,9 @@ class NewsList(APIView):
 
         return Response(serializer.data)
 
+
 class VictimObject(APIView):
-    """Create a Victim"""
+    """Create or Update a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
@@ -1131,8 +1132,34 @@ class VictimObject(APIView):
     @swagger_auto_schema(manual_parameters=[auth], request_body=VictimSerializer)
     def post(self, request):
         data = request.data.copy()
-        del data['id']
-        serializer = VictimSerializer(data=data)
+        if data['id']:
+            victim = Victim.objects.get(pk=data['id'])
+            serializer = VictimSerializer(victim, data=data)
+        else:
+            serializer = VictimSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OccurrenceObject(APIView):
+    """Create or Update an Occurrence"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceSerializer)
+    def post(self, request):
+        data = request.data.copy()
+        if data['id']:
+            occurrence = Occurrence.objects.get(pk=data['id'])
+            serializer = OccurrenceSerializer(occurrence, data=data)
+        else:
+            serializer = OccurrenceSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()

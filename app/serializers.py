@@ -112,13 +112,13 @@ class OccurrenceSerializer(serializers.ModelSerializer):
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
                   'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'team', 'central']
 
-    def create(self, validated_data):
-        validated_data = self.data.serializer.initial_data
-        del validated_data['id']
-        del validated_data['states']
-        del validated_data['victims']
-        occurrence = Occurrence.objects.create(**validated_data)
-        return occurrence
+  #  def create(self, validated_data):
+  #      validated_data = self.data.serializer.initial_data
+  #      del validated_data['id']
+  #      del validated_data['states']
+  #      del validated_data['victims']
+  #      occurrence = Occurrence.objects.create(**validated_data)
+  #      return occurrence
 
 
 class VictimIdSerializer(serializers.ModelSerializer):
@@ -198,7 +198,7 @@ class VictimSerializer(serializers.ModelSerializer):
 
 
 class OccurrenceDetailSerializer(serializers.ModelSerializer):
-    victims = VictimSerializer(many=True)
+    victims = VictimSerializer(many=True, read_only=True)
     states = OccurrenceStateSerializer(many=True, read_only=True)
     team = TeamSerializer(read_only=True)
     central = CentralSerializer(read_only=True)
