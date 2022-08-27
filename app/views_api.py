@@ -1167,3 +1167,25 @@ class OccurrenceObject(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EvaluationObject(APIView):
+    """Create or Update an Evaluation"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[auth], request_body=EvaluationSerializer)
+    def post(self, request):
+        data = request.data.copy()
+        if data['id']:
+            evaluation = Evaluation.objects.get(pk=data['id'])
+            serializer = EvaluationSerializer(evaluation, data=data)
+        else:
+            serializer = EvaluationSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

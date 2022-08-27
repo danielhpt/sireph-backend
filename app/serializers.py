@@ -278,10 +278,11 @@ class ProcedureCirculationSerializer(serializers.ModelSerializer):
 
 
 class EvaluationSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Evaluation
         fields = ['id', 'hours', 'avds', 'ventilation', 'spo2', 'o2', 'etco2', 'pulse', 'ecg', 'skin', 'temperature',
-                  'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news']
+                  'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news', 'victim']
 
 
 class EvaluationDetailSerializer(serializers.ModelSerializer):
