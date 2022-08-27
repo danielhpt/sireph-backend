@@ -478,7 +478,7 @@ class OccurrenceVictimsList(APIView):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(manual_parameters=[auth], request_body=VictimSerializer)
+    @swagger_auto_schema(manual_parameters=[auth], request_body=VictimSerializer(many=True))
     def post(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
 
