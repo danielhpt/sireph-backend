@@ -1122,15 +1122,17 @@ class NewsList(APIView):
 
         return Response(serializer.data)
 
-class Victim(APIView):
-    """Create Or Update a Victim"""
+class VictimObject(APIView):
+    """Create a Victim"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[auth], request_body=VictimSerializer)
     def post(self, request):
-        serializer = VictimSerializer(data=request.data.copy())
+        data = request.data.copy()
+        del data['id']
+        serializer = VictimSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
