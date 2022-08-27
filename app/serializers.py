@@ -127,15 +127,6 @@ class VictimIdSerializer(serializers.ModelSerializer):
         fields = ['id']
 
 
-class VictimSimplifiedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Victim
-        fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
-                  'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
-                  'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
-                  'type_of_emergency', 'hospital']
-
-
 class StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = State
@@ -162,18 +153,6 @@ class OccurrenceSimplifiedSerializer(serializers.ModelSerializer):
         fields = ['id', 'occurrence_number']
 
 
-class OccurrenceDetailSerializer(serializers.ModelSerializer):
-    victims = VictimSimplifiedSerializer(many=True, read_only=True)
-    states = OccurrenceStateSerializer(many=True, read_only=True)
-    team = TeamSerializer(read_only=True)
-    central = CentralSerializer(read_only=True)
-
-    class Meta:
-        model = Occurrence
-        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
-                  'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'central', 'team', 'victims', 'states']
-
-
 class TypeOfTransportSerializer(serializers.ModelSerializer):
     class Meta:
         model = TypeOfTransport
@@ -193,11 +172,6 @@ class HospitalSerializer(serializers.ModelSerializer):
 
 
 class VictimSerializer(serializers.ModelSerializer):
-    type_of_transport = TypeOfTransportSerializer(read_only=True)
-    non_transport_reason = NonTransportReasonSerializer(read_only=True)
-    occurrence = OccurrenceSimplifiedSerializer(read_only=True)
-    hospital = HospitalSerializer(read_only=True)
-
     class Meta:
         model = Victim
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
@@ -207,15 +181,33 @@ class VictimSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        del validated_data['id']
         if validated_data['type_of_transport']:
             validated_data['type_of_transport'] = TypeOfTransport.objects.get(
-                pk=validated_data['type_of_transport']['id'])
+                pk=validated_data['type_of_transport'])
         if validated_data['non_transport_reason']:
             validated_data['non_transport_reason'] = NonTransportReason.objects.get(
-                pk=validated_data['non_transport_reason']['id'])
+                pk=validated_data['non_transport_reason'])
+        if validated_data['occurrence']:
+            validated_data['occurrence'] = Occurrence.objects.get(
+                pk=validated_data['occurrence'])
+        if validated_data['hospital']:
+            validated_data['hospital'] = Hospital.objects.get(
+                pk=validated_data['hospital'])
         victim = Victim.objects.create(**validated_data)
         return victim
+
+
+class OccurrenceDetailSerializer(serializers.ModelSerializer):
+    victims = VictimSerializer(many=True)
+    states = OccurrenceStateSerializer(many=True, read_only=True)
+    team = TeamSerializer(read_only=True)
+    central = CentralSerializer(read_only=True)
+
+    class Meta:
+        model = Occurrence
+        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
+                  'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'central', 'team', 'victims',
+                  'states']
 
 
 class PharmacySerializer(serializers.ModelSerializer):

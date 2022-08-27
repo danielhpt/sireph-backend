@@ -58,7 +58,7 @@ class Login(APIView):
         password = request.data["password"]
         user = get_object_or_404(User, username=username)
         if not check_password(password, user.password):
-            return ValidationError()
+            return Response(status=status.HTTP_400_BAD_REQUEST)  # return ValidationError()
         else:
             login(request, user)
             token = Token.objects.get_or_create(user=user)[0].key
@@ -1121,3 +1121,20 @@ class NewsList(APIView):
         serializer = NewsSerializer(news, many=True)
 
         return Response(serializer.data)
+
+class Victim(APIView):
+    """Create Or Update a Victim"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[auth], request_body=VictimSerializer)
+    def post(self, request):
+        serializer = VictimSerializer(data=request.data.copy())
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
