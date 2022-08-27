@@ -331,7 +331,7 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
         instance.nr_shocks = validated_data.get('nr_shocks', instance.nr_shocks)
         instance.recovery = validated_data.get('recovery', instance.recovery)
         instance.downtime = validated_data.get('downtime', instance.downtime)
-        instance.nr_shocks = validated_data.get('mechanical_compressions', instance.nr_shocks)
+        instance.mechanical_compressions = validated_data.get('mechanical_compressions', instance.mechanical_compressions)
         instance.performed = validated_data.get('performed', instance.performed)
 
         instance.save()
