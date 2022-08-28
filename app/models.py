@@ -101,8 +101,9 @@ class Occurrence(models.Model):
     motive = models.CharField(max_length=50)
     number_of_victims = models.IntegerField()
     local = models.CharField(max_length=100)
-    parish = models.CharField(max_length=50)  # freguesia
-    municipality = models.CharField(max_length=50)
+    gps_coordinates = models.CharField(max_length=100, null=True, blank=True)
+    parish = models.CharField(max_length=50, null=True, blank=True)  # freguesia
+    municipality = models.CharField(max_length=50, null=True, blank=True)
     active = models.BooleanField(default=True)
     alert_mode = models.BooleanField(default=False)
     created_on = models.DateTimeField(null=True, blank=True)
