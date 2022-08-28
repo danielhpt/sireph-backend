@@ -423,6 +423,6 @@ class ProcedureProtocol(models.Model):
 
 
 class News(models.Model):
-    title = models.CharField(max_length=25, null=True, blank=True)
+    title = models.CharField(max_length=500, null=True, blank=True)
     description = models.CharField(max_length=500, null=True, blank=True)
-    image_url = models.CharField(max_length=250, null=True, blank=True)
+    image_url = models.CharField(max_length=500, null=True, blank=True)
