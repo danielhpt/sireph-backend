@@ -96,8 +96,8 @@ class TeamTechnician(models.Model):
 
 class Occurrence(models.Model):
     occurrence_number = models.IntegerField()
-    entity = models.CharField(max_length=50)
-    mean_of_assistance = models.CharField(max_length=50)
+    entity = models.CharField(max_length=50, null=True, blank=True)
+    mean_of_assistance = models.CharField(max_length=50, null=True, blank=True)
     motive = models.CharField(max_length=50)
     number_of_victims = models.IntegerField()
     local = models.CharField(max_length=100)
