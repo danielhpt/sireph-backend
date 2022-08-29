@@ -200,7 +200,7 @@ class VictimSerializer(serializers.ModelSerializer):
 
 class OccurrenceDetailSerializer(serializers.ModelSerializer):
     victims = VictimSerializer(many=True, read_only=True)
-    states = OccurrenceStateSerializer(many=True, read_only=True)
+    states = OccurrenceStateSerializer(many=True, read_only=True, source="occurrence_states")
     team = TeamSerializer(read_only=True)
     central = CentralSerializer(read_only=True)
 
