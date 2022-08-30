@@ -95,6 +95,18 @@ class DispatcherSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'active', 'central']
 
 
+class DispatcherDetailSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='dispatcher.id')
+    username = serializers.ReadOnlyField(source='dispatcher.username')
+    first_name = serializers.ReadOnlyField(source='dispatcher.first_name')
+    last_name = serializers.ReadOnlyField(source='dispatcher.last_name')
+    central = CentralSerializer(source='dispatcher.central', read_only=True)
+
+    class Meta:
+        model = Dispatcher
+        fields = ['id', 'username', 'first_name', 'last_name', 'active', 'central']
+
+
 class HospitalStaffSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='employee.id')
     username = serializers.ReadOnlyField(source='employee.username')
@@ -140,12 +152,6 @@ class OccurrenceStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = OccurrenceState
         fields = ['id', 'state', 'longitude', 'latitude', 'date_time']
-
-    def create(self, validated_data):
-        validated_data = self.data.serializer.initial_data
-        del validated_data['id']
-        occurrenceState = OccurrenceState.objects.create(**validated_data)
-        return occurrenceState
 
 
 class OccurrenceSimplifiedSerializer(serializers.ModelSerializer):
@@ -331,7 +337,8 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
         instance.nr_shocks = validated_data.get('nr_shocks', instance.nr_shocks)
         instance.recovery = validated_data.get('recovery', instance.recovery)
         instance.downtime = validated_data.get('downtime', instance.downtime)
-        instance.mechanical_compressions = validated_data.get('mechanical_compressions', instance.mechanical_compressions)
+        instance.mechanical_compressions = validated_data.get('mechanical_compressions',
+                                                              instance.mechanical_compressions)
         instance.performed = validated_data.get('performed', instance.performed)
 
         instance.save()
