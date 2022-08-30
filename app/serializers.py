@@ -121,7 +121,7 @@ class HospitalStaffSerializer(serializers.ModelSerializer):
 class OccurrenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Occurrence
-        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
+        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local', 'gps_coordinates',
                   'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'team', 'central']
 
 
@@ -206,13 +206,13 @@ class VictimSerializer(serializers.ModelSerializer):
 
 class OccurrenceDetailSerializer(serializers.ModelSerializer):
     victims = VictimSerializer(many=True, read_only=True)
-    states = OccurrenceStateSerializer(many=True, read_only=True)
+    states = OccurrenceStateSerializer(many=True, read_only=True, source="occurrence_states")
     team = TeamSerializer(read_only=True)
     central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Occurrence
-        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
+        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local', 'gps_coordinates',
                   'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'central', 'team', 'victims',
                   'states']
 

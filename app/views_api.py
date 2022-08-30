@@ -62,21 +62,26 @@ class Login(APIView):
         else:
             login(request, user)
             token = Token.objects.get_or_create(user=user)[0].key
-            try:
-                Technician.objects.get(technician=user)
+            if user.is_superuser:
                 is_technician = True
-            except Technician.DoesNotExist:
-                is_technician = False
-            try:
-                Dispatcher.objects.get(dispatcher=user)
                 is_dispatcher = True
-            except Dispatcher.DoesNotExist:
-                is_dispatcher = False
-            try:
-                HospitalStaff.objects.get(employee=user)
                 is_hospitalstaff = True
-            except HospitalStaff.DoesNotExist:
-                is_hospitalstaff = False
+            else:
+                try:
+                    Technician.objects.get(technician=user)
+                    is_technician = True
+                except Technician.DoesNotExist:
+                    is_technician = False
+                try:
+                    Dispatcher.objects.get(dispatcher=user)
+                    is_dispatcher = True
+                except Dispatcher.DoesNotExist:
+                    is_dispatcher = False
+                try:
+                    HospitalStaff.objects.get(employee=user)
+                    is_hospitalstaff = True
+                except HospitalStaff.DoesNotExist:
+                    is_hospitalstaff = False
             data = {
                 "token": token,
                 "user": UserSimplifiedSerializer(user).data,
@@ -1164,7 +1169,7 @@ class OccurrenceObject(APIView):
         if serializer.is_valid():
             serializer.save()
 
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
