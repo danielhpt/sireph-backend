@@ -100,6 +100,7 @@ class DispatcherDetailSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='dispatcher.username')
     first_name = serializers.ReadOnlyField(source='dispatcher.first_name')
     last_name = serializers.ReadOnlyField(source='dispatcher.last_name')
+    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Dispatcher
@@ -176,6 +177,18 @@ class HospitalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hospital
         fields = ['id', 'name', 'address', 'capacity', 'current_capacity', 'contact', 'image_url']
+
+
+class HospitalStaffDetailSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='employee.id')
+    username = serializers.ReadOnlyField(source='employee.username')
+    first_name = serializers.ReadOnlyField(source='employee.first_name')
+    last_name = serializers.ReadOnlyField(source='employee.last_name')
+    hospital = HospitalSerializer(read_only=True)
+
+    class Meta:
+        model = HospitalStaff
+        fields = ['id', 'username', 'first_name', 'last_name', 'active', 'hospital']
 
 
 class VictimSerializer(serializers.ModelSerializer):
@@ -480,6 +493,7 @@ class OccurrenceAllDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Occurrence
-        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local', 'gps_coordinates',
+        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
+                  'gps_coordinates',
                   'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'central', 'team', 'victims',
                   'states']

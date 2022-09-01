@@ -1223,17 +1223,17 @@ class PharmacyObject(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ActiveDispatcherCentral(APIView):
+class ActiveUserCentral(APIView):
     """Lists the Central of a User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: DispatcherSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: DispatcherDetailSerializer(many=True)})
     def get(self, request, user_id):
         user = get_object_or_404(User, pk=user_id)
         dispatchers = Dispatcher.objects.filter(dispatcher=user, active=True)
-        serializer = DispatcherSerializer(dispatchers, many=True)
+        serializer = DispatcherDetailSerializer(dispatchers, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -1244,11 +1244,11 @@ class ActiveUserHospital(APIView):
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: HospitalStaffSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: HospitalStaffDetailSerializer(many=True)})
     def get(self, request, user_id):
         user = get_object_or_404(User, pk=user_id)
         staffs = HospitalStaff.objects.filter(employee=user, active=True)
-        serializer = HospitalStaffSerializer(staffs, many=True)
+        serializer = HospitalStaffDetailSerializer(staffs, many=True)
 
         return Response(serializer.data)
 
