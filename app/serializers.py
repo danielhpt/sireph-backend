@@ -448,8 +448,32 @@ class NewsSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'image_url']
 
 
+class VictimAllDetailsSerializer(serializers.ModelSerializer):
+    type_of_transport = serializers.ReadOnlyField(source='type_of_transport.type_of_transport')
+    non_transport_reason = serializers.ReadOnlyField(source='non_transport_reason.non_transport_reason')
+    occurrence = OccurrenceSimplifiedSerializer(read_only=True)
+    evaluations = EvaluationSerializer(read_only=True, many=True)
+    pharmacies = PharmacySerializer(many=True, read_only=True)
+    procedure_rcp = ProcedureRCPSerializer(read_only=True)
+    procedure_ventilation = ProcedureVentilationSerializer(read_only=True)
+    procedure_protocol = ProcedureProtocolSerializer(read_only=True)
+    procedure_circulation = ProcedureCirculationSerializer(read_only=True)
+    procedure_scale = ProcedureScaleSerializer(read_only=True)
+    symptom = SymptomSerializer(read_only=True)
+    hospital = HospitalSerializer(read_only=True)
+
+    class Meta:
+        model = Victim
+        fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
+                  'disease_history', 'allergies', 'last_meal', 'last_meal_time', 'usual_medication', 'risk_situation',
+                  'medical_followup', 'hospital_checkin_date', 'episode_number', 'comments',
+                  'type_of_emergency', 'type_of_transport', 'non_transport_reason', 'occurrence', 'evaluations',
+                  'symptom', 'procedure_rcp', 'procedure_ventilation', 'procedure_protocol',
+                  'procedure_circulation', 'procedure_scale', 'pharmacies', 'hospital']
+
+
 class OccurrenceAllDetailsSerializer(serializers.ModelSerializer):
-    victims = VictimDetailsSerializer(many=True, read_only=True)
+    victims = VictimAllDetailsSerializer(many=True, read_only=True)
     states = OccurrenceStateSerializer(many=True, read_only=True, source="occurrence_states")
     team = TeamSerializer(read_only=True)
     central = CentralSerializer(read_only=True)
