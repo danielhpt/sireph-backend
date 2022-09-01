@@ -84,7 +84,8 @@ urlpatterns = [
     path('occurrence/', OccurrenceObject.as_view(), name="occurrence_create"),
     path('evaluation/', EvaluationObject.as_view(), name="evaluation_create"),
     path('pharmacy/', PharmacyObject.as_view(), name="pharmacy_create"),
-    #path('user/<int:user_id>/central/', ActiveDispatcherCentral.as_view(), name="active_dispatcher_central"),
+    path('user/<int:user_id>/central/', ActiveDispatcherCentral.as_view(), name="active_dispatcher_central"),
+    path('user/<int:user_id>/hospital/', ActiveUserHospital.as_view(), name="active_staff_hospital"),
     path('centrals/<int:central_id>/teams/', CentralTeamList.as_view(), name="central_team_list"),
 
     path('news/', NewsList.as_view(), name="news_list"),

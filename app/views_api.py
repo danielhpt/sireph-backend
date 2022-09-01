@@ -1220,38 +1220,34 @@ class PharmacyObject(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#todo
+class ActiveDispatcherCentral(APIView):
+    """Lists the Central of a User"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-# class ActiveDispatcherCentral(APIView):
-#     """Lists the Central of a User"""
-#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-#     permission_classes = [IsAuthenticated]
-#     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
-#
-#     @swagger_auto_schema(manual_parameters=[auth], responses={200: DispatcherSerializer(many=False)})
-#     def get(self, request, user_id):
-#         user = get_object_or_404(User, pk=user_id)
-#         dispatchers = Dispatcher.objects.filter(dispatcher=user)
-#         serializer = DispatcherSerializer(dispatchers, many=False)
-#
-#         return Response(data=serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: DispatcherSerializer(many=True)})
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        dispatchers = Dispatcher.objects.filter(dispatcher=user, active=True)
+        serializer = DispatcherSerializer(dispatchers, many=True)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-#todo
+class ActiveUserHospital(APIView):
+    """Lists the hospital of the current user"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-# class ActiveUserHospital(APIView):
-#     """Lists the hospital of the current user"""
-#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-#     permission_classes = [IsAuthenticated]
-#     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
-#
-#     @swagger_auto_schema(manual_parameters=[auth], responses={200: HospitalStaffSerializer(many=True)})
-#     def get(self, request, hospital_id):
-#         hospital = get_object_or_404(Hospital, pk=hospital_id)
-#         staffs = HospitalStaff.objects.filter(hospital=hospital, active=True)
-#         serializer = HospitalStaffSerializer(staffs, many=True)
-#
-#         return Response(serializer.data)
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: HospitalStaffSerializer(many=True)})
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        staffs = HospitalStaff.objects.filter(employee=user, active=True)
+        serializer = HospitalStaffSerializer(staffs, many=True)
+
+        return Response(serializer.data)
 
 
 class CentralTeamList(APIView):
