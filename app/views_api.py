@@ -1069,10 +1069,11 @@ class UserCreate(APIView):
     @swagger_auto_schema(request_body=UserSerializer)
     def post(self, request):  # working
         serializer = UserSerializer(data=request.data.copy())
-        user = User.objects.filter(username=serializer.initial_data['username'])
+        user = User.objects.get(username=serializer.initial_data['username'])
 
         if user:
-            return Response(data=user, status=status.HTTP_226_IM_USED)
+            serializer = UserSerializer(user, many=False)
+            return Response(data=serializer.data, status=status.HTTP_226_IM_USED)
 
         if serializer.is_valid():
             serializer.save()
