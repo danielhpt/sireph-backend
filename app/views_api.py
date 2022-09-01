@@ -1069,7 +1069,7 @@ class UserCreate(APIView):
         user = User.objects.filter(username=serializer.initial_data['username'])
 
         if user:
-            return Response(status=status.HTTP_226_IM_USED)
+            return Response(data=user, status=status.HTTP_226_IM_USED)
 
         if serializer.is_valid():
             serializer.save()
