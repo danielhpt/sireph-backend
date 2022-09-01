@@ -446,3 +446,16 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ['id', 'title', 'description', 'image_url']
+
+
+class OccurrenceAllDetailsSerializer(serializers.ModelSerializer):
+    victims = VictimDetailsSerializer(many=True, read_only=True)
+    states = OccurrenceStateSerializer(many=True, read_only=True, source="occurrence_states")
+    team = TeamSerializer(read_only=True)
+    central = CentralSerializer(read_only=True)
+
+    class Meta:
+        model = Occurrence
+        fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local', 'gps_coordinates',
+                  'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'central', 'team', 'victims',
+                  'states']
