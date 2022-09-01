@@ -246,26 +246,29 @@ class TechnicianActiveOccurrence(APIView):
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceAllDetailsSerializer(many=False)})
     def get(self, request, technician_id):  # working
         technician = get_object_or_404(Technician, pk=technician_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
 
         if len(occurrences) > 0:
-            serializer = OccurrenceDetailSerializer(occurrences[0])
+            serializer = OccurrenceAllDetailsSerializer(occurrences[0])
             return Response(serializer.data)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, technician_id):  # todo sem swagger?
+    @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceAllDetailsSerializer)
+    def put(self, request, technician_id):
         technician = get_object_or_404(Technician, pk=technician_id)
+        data = request.data.copy()
+        occurrence = get_object_or_404(Occurrence, pk=data.get("id"))
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
-
         if len(occurrences) > 0:
-            occurrences[0].active = False
-            occurrences[0].save()
-            return Response(status=status.HTTP_200_OK)
-
+            if occurrences[0].id == occurrence.id:
+                serializer = OccurrenceAllDetailsSerializer(occurrence, data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -290,11 +293,11 @@ class TechnicianOccurrenceList(APIView):
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceAllDetailsSerializer(many=True)})
     def get(self, request, technician_id):
         technician = get_object_or_404(Technician, pk=technician_id)
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician)
-        serializer = OccurrenceDetailSerializer(occurrences, many=True)
+        serializer = OccurrenceAllDetailsSerializer(occurrences, many=True)
 
         return Response(serializer.data)
 
