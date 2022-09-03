@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
+from django.utils.safestring import mark_safe
 from rest_framework.authtoken.admin import TokenAdmin
 
 from .models import *
@@ -53,8 +54,18 @@ class PharmacyInline(admin.TabularInline):
     model = Pharmacy
 
 
+class GlasgowScaleInline(admin.StackedInline):
+    model = GlasgowScale
+
+
+class EvaluationAdmin(admin.ModelAdmin):
+    inlines = [GlasgowScaleInline]
+    model = Evaluation
+
+
 class EvaluationInline(admin.TabularInline):
     model = Evaluation
+    show_change_link = True
 
 
 class HospitalAdmin(admin.ModelAdmin):
@@ -108,6 +119,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(Evaluation, EvaluationAdmin)
 admin.site.register(Victim, VictimAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(State)

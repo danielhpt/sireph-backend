@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils.datetime_safe import datetime
 from rest_framework.authtoken.models import Token
 
@@ -328,7 +329,7 @@ class Evaluation(models.Model):
         related_name="evaluations"
     )
     hours = models.DateTimeField()
-    avds = models.IntegerField(null=True, blank=True)
+    avds = models.CharField(max_length=5, null=True, blank=True)
     ventilation = models.PositiveSmallIntegerField(null=True, blank=True)
     spo2 = models.PositiveSmallIntegerField(null=True, blank=True)
     o2 = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -348,6 +349,19 @@ class Evaluation(models.Model):
         return str(self.victim.id) + ' - ' + str(self.hours)
 
 
+class GlasgowScale(models.Model):
+    evaluation = models.OneToOneField(
+        Evaluation,
+        on_delete=models.RESTRICT,
+        primary_key=True,
+        related_name="glasgow_scale"
+    )
+    eyes = models.PositiveSmallIntegerField(null=True, blank=True)
+    verbal = models.PositiveSmallIntegerField(null=True, blank=True)
+    motor = models.PositiveSmallIntegerField(null=True, blank=True)
+    total = models.PositiveSmallIntegerField(null=True, blank=True)
+
+
 class Symptom(models.Model):
     victim = models.OneToOneField(
         Victim,
@@ -356,7 +370,7 @@ class Symptom(models.Model):
         related_name='symptom'
     )
     comments = models.CharField(max_length=400, null=True, blank=True)
-    image_path = models.CharField(max_length=100, null=True, blank=True)
+    json = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
         return str(self.victim.id) + ' - Symptoms'

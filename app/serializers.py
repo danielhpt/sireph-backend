@@ -292,32 +292,45 @@ class ProcedureCirculationSerializer(serializers.ModelSerializer):
         return instance
 
 
+class GlasgowScaleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GlasgowScale
+        fields = ['eyes', 'verbal', 'motor', 'total']
+
+
 class EvaluationSerializer(serializers.ModelSerializer):
+    glasgow_scale = GlasgowScaleSerializer(allow_null=True)
+
     class Meta:
         model = Evaluation
         fields = ['id', 'hours', 'avds', 'ventilation', 'spo2', 'o2', 'etco2', 'pulse', 'ecg', 'skin', 'temperature',
-                  'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news', 'victim']
+                  'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news', 'victim', 'glasgow_scale']
 
 
 class EvaluationDetailSerializer(serializers.ModelSerializer):
     victim = VictimIdSerializer(read_only=True)
+    glasgow_scale = GlasgowScaleSerializer(allow_null=True)
 
     class Meta:
         model = Evaluation
         fields = ['id', 'hours', 'avds', 'ventilation', 'spo2', 'o2', 'etco2', 'pulse', 'ecg', 'skin', 'temperature',
-                  'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news', 'victim']
+                  'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news', 'victim', 'glasgow_scale']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        del validated_data['id']
+        if validated_data['glasgow_scale']:
+            glasgow_scale = validated_data['glasgow_scale']
+            del validated_data['glasgow_scale']
         evaluation = Evaluation.objects.create(**validated_data)
+        if validated_data['glasgow_scale']:
+            GlasgowScale.objects.create(evaluation=evaluation, **glasgow_scale)
         return evaluation
 
 
 class SymptomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Symptom
-        fields = ['comments', 'image_path', 'victim']
+        fields = ['comments', 'json', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -326,7 +339,7 @@ class SymptomSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.comments = validated_data.get('comments', instance.comments)
-        instance.image_path = validated_data.get('image_path', instance.image_path)
+        instance.json = validated_data.get('json', instance.json)
         instance.save()
 
         return instance
