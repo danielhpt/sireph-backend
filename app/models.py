@@ -329,7 +329,7 @@ class Evaluation(models.Model):
         related_name="evaluations"
     )
     hours = models.DateTimeField()
-    avds = models.CharField(max_length=5, null=True, blank=True)
+    avds = models.CharField(max_length=1, null=True, blank=True)
     ventilation = models.PositiveSmallIntegerField(null=True, blank=True)
     spo2 = models.PositiveSmallIntegerField(null=True, blank=True)
     o2 = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -370,10 +370,22 @@ class Symptom(models.Model):
         related_name='symptom'
     )
     comments = models.CharField(max_length=400, null=True, blank=True)
-    json = models.CharField(max_length=1000, null=True, blank=True)
+    total_burn_area = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
 
     def __str__(self):
         return str(self.victim.id) + ' - Symptoms'
+
+
+class Trauma(models.Model):
+    symptom = models.ForeignKey(
+        Symptom,
+        on_delete=models.RESTRICT,
+        related_name='traumas'
+    )
+    body_part = models.CharField(max_length=20, null=True, blank=True)
+    type_of_injury = models.CharField(max_length=1, null=True, blank=True)
+    closed = models.BooleanField(default=False)
+    burn_degree = models.CharField(max_length=2, null=True, blank=True)
 
 
 class ProcedureRCP(models.Model):

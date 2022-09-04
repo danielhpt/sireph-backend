@@ -46,8 +46,18 @@ class ProcedureRCPInline(admin.StackedInline):
     model = ProcedureRCP
 
 
+class TraumaInline(admin.TabularInline):
+    model = Trauma
+
+
+class SymptomAdmin(admin.ModelAdmin):
+    inlines = [TraumaInline]
+    model = Symptom
+
+
 class SymptomInline(admin.StackedInline):
     model = Symptom
+    show_change_link = True
 
 
 class PharmacyInline(admin.TabularInline):
@@ -81,7 +91,7 @@ class VictimAdmin(admin.ModelAdmin):
         ProcedureCirculationInline,
         ProcedureProtocolInline,
         ProcedureScaleInline,
-        PharmacyInline,
+        PharmacyInline
     ]
 
 
@@ -119,6 +129,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(Symptom, SymptomAdmin)
 admin.site.register(Evaluation, EvaluationAdmin)
 admin.site.register(Victim, VictimAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)

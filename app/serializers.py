@@ -327,22 +327,44 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
         return evaluation
 
 
+class TraumaSerializaer(serializers.ModelSerializer):
+    class Meta:
+        model = Trauma
+        fields = ['id', 'body_part', 'type_of_injury', 'closed', 'burn_degree']
+
+
 class SymptomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Symptom
-        fields = ['comments', 'json', 'victim']
+        fields = ['comments', 'victim', 'total_burn_area']
+
+
+class SymptomDetailsSerializer(serializers.ModelSerializer):
+    traumas = TraumaSerializaer(many=True, read_only=True)
+
+    class Meta:
+        model = Symptom
+        fields = ['comments', 'traumas', 'victim', 'total_burn_area']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
         symptom = Symptom.objects.create(**validated_data)
         return symptom
 
-    def update(self, instance, validated_data):
-        instance.comments = validated_data.get('comments', instance.comments)
-        instance.json = validated_data.get('json', instance.json)
-        instance.save()
 
-        return instance
+class TraumaDetailsSerializaer(serializers.ModelSerializer):
+    symptom = SymptomSerializer(read_only=True)
+
+    class Meta:
+        model = Trauma
+        fields = ['id', 'body_part', 'type_of_injury', 'closed', 'burn_degree', 'symptom']
+
+    def create(self, validated_data):
+        validated_data = self.data.serializer.initial_data
+        symptom = validated_data["symptom"]
+        del validated_data["symptom"]
+        trauma = Trauma.objects.create(**validated_data, symptom=symptom)
+        return trauma
 
 
 class ProcedureRCPSerializer(serializers.ModelSerializer):
@@ -435,7 +457,7 @@ class VictimDetailsSerializer(serializers.ModelSerializer):
     procedure_protocol = ProcedureProtocolSerializer(read_only=True)
     procedure_circulation = ProcedureCirculationSerializer(read_only=True)
     procedure_scale = ProcedureScaleSerializer(read_only=True)
-    symptom = SymptomSerializer(read_only=True)
+    symptom = SymptomDetailsSerializer(read_only=True)
 
     class Meta:
         model = Victim
@@ -485,7 +507,7 @@ class VictimAllDetailsSerializer(serializers.ModelSerializer):
     procedure_protocol = ProcedureProtocolSerializer(read_only=True)
     procedure_circulation = ProcedureCirculationSerializer(read_only=True)
     procedure_scale = ProcedureScaleSerializer(read_only=True)
-    symptom = SymptomSerializer(read_only=True)
+    symptom = SymptomDetailsSerializer(read_only=True)
     hospital = HospitalSerializer(read_only=True)
 
     class Meta:

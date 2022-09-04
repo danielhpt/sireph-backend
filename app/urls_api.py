@@ -65,6 +65,7 @@ urlpatterns = [
     path('victims/<int:victim_id>/evaluations/<int:evaluation_id>/', VictimEvaluationDetail.as_view(),
          name="victim_evaluation_detail"),
     path('victims/<int:victim_id>/symptom/', VictimSymptom.as_view(), name="victim_symptom"),
+    path('victims/<int:victim_id>/symptom/traumas/', VictimSymptomTraumasList.as_view(), name="victim_symptom_traumas"),
     path('victims/<int:victim_id>/procedure_rcp/', VictimProcedureRCP.as_view(), name="victim_procedure_rcp"),
     path('victims/<int:victim_id>/procedure_ventilation/', VictimProcedureVentilation.as_view(),
          name="victim_procedure_ventilation"),
