@@ -123,7 +123,7 @@ class OccurrenceSerializer(serializers.ModelSerializer):
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
                   'gps_coordinates',
-                  'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'team', 'central']
+                  'parish', 'municipality', 'active', 'alert_mode', 'created_by', 'created_on', 'team', 'central']
 
 
 #  def create(self, validated_data):

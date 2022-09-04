@@ -1106,12 +1106,7 @@ class VictimOccurrences(APIView):
     @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
     def get(self, request, user_id):  #
         user = get_object_or_404(User, pk=user_id)
-        user = UserSerializer(data=user)
-        victims = Victim.objects.filter(identity_number=user.initial_data.username)
-        occurrences = []
-
-        for v in victims:
-            occurrences += Occurrence.objects.filter(victims=v)
+        occurrences = Occurrence.objects.filter(created_by=user_id)
 
         serializer = OccurrenceDetailSerializer(occurrences, many=True)
 
