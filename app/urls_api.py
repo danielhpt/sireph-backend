@@ -32,7 +32,7 @@ urlpatterns = [
     # path('user/<int:user_id>/occurrence/', UserActiveOccurrence.as_view(), name="user_active_occurrence"),
 
     path('users/', UserList.as_view(), name="user_list"),  # admin only
-    #path('users/<int:user_id>/', UserDetail.as_view(), name="user_detail"),
+    # path('users/<int:user_id>/', UserDetail.as_view(), name="user_detail"),
     path('users/<int:user_id>/teams/', UserTeamList.as_view(), name="user_team_list"),
     path('users/dispatchers/', DispatcherList.as_view(), name="user_dispatcher_list"),
     path('users/employees/', HospitalStaffList.as_view(), name="user_employee_list"),
@@ -44,8 +44,10 @@ urlpatterns = [
 
     # path('team/active/<int:user_id>/', UserTeamActive.as_view(), name="team_user_active"),
 
-    path('technician/<int:technician_id>/occurrence/', TechnicianActiveOccurrence.as_view(), name="technician_active_occurrence"),
-    path('technician/<int:technician_id>/occurrences/', TechnicianOccurrenceList.as_view(), name="technician_occurrences_list"),
+    path('technician/<int:technician_id>/occurrence/', TechnicianActiveOccurrence.as_view(),
+         name="technician_active_occurrence"),
+    path('technician/<int:technician_id>/occurrences/', TechnicianOccurrenceList.as_view(),
+         name="technician_occurrences_list"),
     path('technician/<int:technician_id>/team/', TechnicianTeamActive.as_view(), name="technician_active_team"),
     path('technician/by_token/', TechnicianDetailByToken.as_view(), name="technician_detail_by_token"),
 
@@ -77,7 +79,8 @@ urlpatterns = [
 
     path('centrals/', CentralList.as_view(), name="central_list"),
     path('centrals/<int:central_id>/occurrences/', CentralOccurrencesList.as_view(), name="central_occurrences_list"),
-    path('centrals/<int:central_id>/technicians/', CentralActiveTechniciansList.as_view(), name="central_active_technicians_list"),
+    path('centrals/<int:central_id>/technicians/', CentralActiveTechniciansList.as_view(),
+         name="central_active_technicians_list"),
 
     path('victim/<int:user_id>/occurrences', VictimOccurrences.as_view(), name="victim_occurrences"),
     path('victim/', VictimObject.as_view(), name="victim_create"),
@@ -86,7 +89,7 @@ urlpatterns = [
     path('pharmacy/', PharmacyObject.as_view(), name="pharmacy_create"),
     path('user/<int:user_id>/central/', ActiveUserCentral.as_view(), name="active_user_central"),
     path('user/<int:user_id>/hospital/', ActiveUserHospital.as_view(), name="active_user_hospital"),
-    path('centrals/<int:central_id>/teams/', CentralTeamList.as_view(), name="central_team_list"),
+    # path('centrals/<int:central_id>/teams/', CentralTeamList.as_view(), name="central_team_list"),
 
     path('news/', NewsList.as_view(), name="news_list"),
 ]
