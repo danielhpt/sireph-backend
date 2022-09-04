@@ -452,7 +452,7 @@ class OccurrenceDetails(APIView):
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=True)})
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: OccurrenceDetailSerializer(many=False)})
     def get(self, request, occurrence_id):  # working
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
         serializer = OccurrenceDetailSerializer(occurrence)
@@ -1254,16 +1254,16 @@ class ActiveUserHospital(APIView):
         return Response(serializer.data)
 
 
-class CentralTeamList(APIView):
-    """List all Teams for a specific Central"""
-    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
-
-    @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
-    def get(self, request, central_id):  # working
-        central = get_object_or_404(Central, pk=central_id)
-        team = Team.objects.filter(central=central)
-        serializer = TeamSerializer(team, many=True)
-
-        return Response(serializer.data)
+# class CentralTeamList(APIView):
+#     """List all Teams for a specific Central"""
+#     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
+#     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+#
+#     @swagger_auto_schema(manual_parameters=[auth], responses={200: TeamSerializer(many=True)})
+#     def get(self, request, central_id):  # working
+#         central = get_object_or_404(Central, pk=central_id)
+#         team = Team.objects.filter(central=central)
+#         serializer = TeamSerializer(team, many=True)
+#
+#         return Response(serializer.data)
