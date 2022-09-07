@@ -192,7 +192,6 @@ class HospitalStaffDetailSerializer(serializers.ModelSerializer):
 
 
 class VictimSerializer(serializers.ModelSerializer):
-    hospital = HospitalSerializer(read_only=True)
     class Meta:
         model = Victim
         fields = ['id', 'name', 'birthdate', 'age', 'gender', 'identity_number', 'address', 'circumstances',
