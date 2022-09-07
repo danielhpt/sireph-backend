@@ -119,7 +119,6 @@ class HospitalStaffSerializer(serializers.ModelSerializer):
 
 
 class OccurrenceSerializer(serializers.ModelSerializer):
-    central = CentralSerializer(read_only=True)
     class Meta:
         model = Occurrence
         fields = ['id', 'occurrence_number', 'entity', 'mean_of_assistance', 'motive', 'number_of_victims', 'local',
