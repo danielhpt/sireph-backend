@@ -274,7 +274,7 @@ class Pharmacy(models.Model):
         on_delete=models.RESTRICT,
         related_name="pharmacies"
     )
-    time = models.TimeField(null=True, blank=True)
+    time = models.DateTimeField(null=True, blank=True)
     pharmacy = models.CharField(max_length=50)
     dose = models.CharField(max_length=50, null=True, blank=True)
     route = models.CharField(max_length=50, null=True, blank=True)
