@@ -1283,3 +1283,24 @@ class VictimSymptomTraumasList(APIView):
             return Response(status=status.HTTP_201_CREATED, data=serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VictimTransport(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[auth], request_body=VictimTransportSerializer)
+    def put(self, request, victim_id):
+        data = request.data.copy()
+        victim = get_object_or_404(Victim, pk=victim_id)
+
+        serializer = VictimTransportSerializer(victim, data=data)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

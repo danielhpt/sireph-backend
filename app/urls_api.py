@@ -74,6 +74,7 @@ urlpatterns = [
     path('victims/<int:victim_id>/procedure_circulation/', VictimProcedureCirculation.as_view(),
          name="victim_procedure_circulation"),
     path('victims/<int:victim_id>/procedure_scale/', VictimProcedureScale.as_view(), name="victim_procedure_scale"),
+    path('victims/<int:victim_id>/transport/', VictimTransport.as_view(), name="victim_transport"),
 
     path('hospitals/', HospitalList.as_view(), name="hospital_list"),
     path('hospitals/victims/', HospitalVictimsList.as_view(), name="hospital_victims_list"),

@@ -532,3 +532,34 @@ class OccurrenceAllDetailsSerializer(serializers.ModelSerializer):
                   'gps_coordinates',
                   'parish', 'municipality', 'active', 'alert_mode', 'created_on', 'central', 'team', 'victims',
                   'states']
+
+
+class VictimTransportSerializer(serializers.ModelSerializer):
+    type_of_transport = serializers.IntegerField(source='type_of_transport.id', allow_null=True)
+    non_transport_reason = serializers.IntegerField(source='non_transport_reason.id', allow_null=True)
+    hospital = serializers.IntegerField(source="hospital.id", allow_null=True)
+
+    class Meta:
+        model = Victim
+        fields = ['id', 'medical_followup', 'episode_number', 'type_of_transport', 'non_transport_reason', 'hospital']
+
+    def update(self, instance, validated_data):
+        instance.medical_followup = validated_data.get('medical_followup', instance.medical_followup)
+        instance.episode_number = validated_data.get('episode_number', instance.episode_number)
+
+        if validated_data.get('type_of_transport')['id']:
+            instance.type_of_transport = validated_data.get(TypeOfTransport.objects.get(pk=validated_data.get('type_of_transport')['id']))
+        else:
+            instance.type_of_transport = None
+        if validated_data.get('non_transport_reason')['id']:
+            instance.non_transport_reason = validated_data.get(NonTransportReason.objects.get(pk=validated_data.get('non_transport_reason')['id']))
+        else:
+            instance.non_transport_reason = None
+        if validated_data.get('hospital')['id']:
+            instance.hospital = validated_data.get(Hospital.objects.get(pk=validated_data.get('hospital')['id']))
+        else:
+            instance.hospital = None
+
+        instance.save()
+
+        return instance
