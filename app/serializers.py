@@ -244,6 +244,13 @@ class PharmacyDetailSerializer(serializers.ModelSerializer):
         model = Pharmacy
         fields = ['id', 'time', 'pharmacy', 'dose', 'route', 'adverse_effect', 'victim']
 
+    def create(self, validated_data):
+        validated_data = self.data.serializer.initial_data
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        pharmacy = Pharmacy.objects.create(victim=victim, **validated_data)
+        return pharmacy
+
 
 class ProcedureScaleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -317,12 +324,13 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
                   'systolic_blood_pressure', 'diastolic_blood_pressure', 'pupils', 'pain', 'glycemia', 'news', 'victim', 'glasgow_scale']
 
     def create(self, validated_data):
+        glasgow_scale = None
         validated_data = self.data.serializer.initial_data
         if validated_data['glasgow_scale']:
             glasgow_scale = validated_data['glasgow_scale']
             del validated_data['glasgow_scale']
         evaluation = Evaluation.objects.create(**validated_data)
-        if validated_data['glasgow_scale']:
+        if glasgow_scale:
             GlasgowScale.objects.create(evaluation=evaluation, **glasgow_scale)
         return evaluation
 

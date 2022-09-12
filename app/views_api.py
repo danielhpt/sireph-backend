@@ -1088,8 +1088,10 @@ class CentralActiveTechniciansList(APIView):
     """List the active Technicians of a Central"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    def get(self, request, central_id):  # todo sem swagger?
+    @swagger_auto_schema(manual_parameters=[auth], responses={200: TechnicianSerializer(many=True)})
+    def get(self, request, central_id):
         central = get_object_or_404(Central, pk=central_id)
         technicians = Technician.objects.filter(central=central, active=True)
         serializer = TechnicianSerializer(technicians, many=True)
