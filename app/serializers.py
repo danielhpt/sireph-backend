@@ -371,8 +371,7 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcedureRCP
         fields = ['witnessed', 'SBV_DAE', 'SIV_SAV', 'first_rhythm', 'nr_shocks', 'recovery', 'downtime',
-                  #'mechanical_compressions',
-                  'performed', 'victim']
+                  'mechanical_compressions', 'performed', 'victim']
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
@@ -387,7 +386,7 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
         instance.nr_shocks = validated_data.get('nr_shocks', instance.nr_shocks)
         instance.recovery = validated_data.get('recovery', instance.recovery)
         instance.downtime = validated_data.get('downtime', instance.downtime)
-        #instance.mechanical_compressions = validated_data.get('mechanical_compressions', instance.mechanical_compressions)
+        instance.mechanical_compressions = validated_data.get('mechanical_compressions', instance.mechanical_compressions)
         instance.performed = validated_data.get('performed', instance.performed)
 
         instance.save()
