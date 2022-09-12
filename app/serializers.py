@@ -36,7 +36,7 @@ class TechnicianDetailSerializer(serializers.ModelSerializer):
 
 class TeamTechnicianSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='technician.id')
-    user = UserSimplifiedSerializer(source='technician.technician')
+    user = UserSimplifiedSerializer(source='technician.technician', read_only=True)
 
     class Meta:
         model = TeamTechnician
@@ -45,7 +45,7 @@ class TeamTechnicianSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     technicians = TeamTechnicianSerializer(many=True, source='team_technicians')
-    central = CentralSerializer()
+    central = CentralSerializer(read_only=True)
 
     class Meta:
         model = Team
@@ -67,6 +67,9 @@ class TeamSerializer(serializers.ModelSerializer):
             teamTechnician.save()
         if team.central is None:
             team.central = Technician.objects.get(pk=technicians_data[0]['id']).central
+        if team.central is None:
+            team.central = Central.objects.get(pk=validated_data["central"]["id"])
+        team.save()
         return team
 
     def update(self, instance, validated_data):
@@ -153,6 +156,14 @@ class OccurrenceStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = OccurrenceState
         fields = ['id', 'state', 'longitude', 'latitude', 'date_time']
+
+    def create(self, validated_data):
+        validated_data = self.data.serializer.initial_data
+        occurrance_state = OccurrenceState.objects.create(occurrence=validated_data["occurrence"], state=validated_data["state"],
+                                                          longitude=validated_data["longitude"], latitude=validated_data["latitude"],
+                                                          date_time=validated_data["date_time"])
+        occurrance_state.save()
+        return occurrance_state
 
 
 class OccurrenceSimplifiedSerializer(serializers.ModelSerializer):
