@@ -491,9 +491,11 @@ class OccurrenceVictimsList(APIView):
         occurrence = get_object_or_404(Occurrence, pk=occurrence_id)
 
         data = request.data.copy()
-        data['occurrence'] = occurrence
-        del data['evaluations']
-        del data['pharmacies']
+        data['occurrence'] = occurrence.id
+        if 'evaluations' in data:
+            del data['evaluations']
+        if 'pharmacies' in data:
+            del data['pharmacies']
         serializer = VictimSerializer(data=data)
 
         if serializer.is_valid():

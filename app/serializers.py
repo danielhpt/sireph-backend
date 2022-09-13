@@ -213,19 +213,18 @@ class VictimSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        if validated_data['type_of_transport']:
-            validated_data['type_of_transport'] = TypeOfTransport.objects.get(
-                pk=validated_data['type_of_transport'])
-        if validated_data['non_transport_reason']:
-            validated_data['non_transport_reason'] = NonTransportReason.objects.get(
-                pk=validated_data['non_transport_reason'])
-        if validated_data['occurrence']:
-            validated_data['occurrence'] = Occurrence.objects.get(
-                pk=validated_data['occurrence'])
-        if validated_data['hospital']:
-            validated_data['hospital'] = Hospital.objects.get(
-                pk=validated_data['hospital'])
-        victim = Victim.objects.create(**validated_data)
+        if 'type_of_transport' in validated_data:
+            if validated_data['type_of_transport'] is not None:
+                validated_data['type_of_transport'] = TypeOfTransport.objects.get(type_of_transport=validated_data['type_of_transport'])
+        if 'non_transport_reason' in validated_data:
+            if validated_data['non_transport_reason'] is not None:
+                validated_data['non_transport_reason'] = NonTransportReason.objects.get(non_transport_reason=validated_data['non_transport_reason'])
+        if 'hospital' in validated_data:
+            if validated_data['hospital'] is not None:
+                validated_data['hospital'] = Hospital.objects.get(pk=validated_data['hospital'])
+        occurrence_id = validated_data['occurrence']
+        del validated_data['occurrence']
+        victim = Victim.objects.create(occurrence_id=occurrence_id, **validated_data)
         return victim
 
 
