@@ -270,7 +270,9 @@ class ProcedureScaleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        procedureScale = ProcedureScale.objects.create(**validated_data)
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        procedureScale = ProcedureScale.objects.create(victim_id=victim, **validated_data)
         return procedureScale
 
     def update(self, instance, validated_data):
@@ -293,7 +295,9 @@ class ProcedureCirculationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        procedureCirculation = ProcedureCirculation.objects.create(**validated_data)
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        procedureCirculation = ProcedureCirculation.objects.create(victim_id=victim, **validated_data)
         return procedureCirculation
 
     def update(self, instance, validated_data):
@@ -337,10 +341,12 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         glasgow_scale = None
         validated_data = self.data.serializer.initial_data
+        victim = validated_data["victim"]
+        del validated_data["victim"]
         if validated_data['glasgow_scale']:
             glasgow_scale = validated_data['glasgow_scale']
             del validated_data['glasgow_scale']
-        evaluation = Evaluation.objects.create(**validated_data)
+        evaluation = Evaluation.objects.create(victim=victim, **validated_data)
         if glasgow_scale:
             GlasgowScale.objects.create(evaluation=evaluation, **glasgow_scale)
         return evaluation
@@ -367,7 +373,9 @@ class SymptomDetailsSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        symptom = Symptom.objects.create(**validated_data)
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        symptom = Symptom.objects.create(victim_id=victim, **validated_data)
         return symptom
 
 
@@ -394,7 +402,9 @@ class ProcedureRCPSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        procedureRCP = ProcedureRCP.objects.create(**validated_data)
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        procedureRCP = ProcedureRCP.objects.create(victim_id=victim, **validated_data)
         return procedureRCP
 
     def update(self, instance, validated_data):
@@ -421,7 +431,9 @@ class ProcedureVentilationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        procedureVentilation = ProcedureVentilation.objects.create(**validated_data)
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        procedureVentilation = ProcedureVentilation.objects.create(victim_id=victim, **validated_data)
         return procedureVentilation
 
     def update(self, instance, validated_data):
@@ -446,7 +458,9 @@ class ProcedureProtocolSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.data.serializer.initial_data
-        procedureProtocol = ProcedureProtocol.objects.create(**validated_data)
+        victim = validated_data["victim"]
+        del validated_data["victim"]
+        procedureProtocol = ProcedureProtocol.objects.create(victim_id=victim, **validated_data)
         return procedureProtocol
 
     def update(self, instance, validated_data):
@@ -566,15 +580,15 @@ class VictimTransportSerializer(serializers.ModelSerializer):
         instance.episode_number = validated_data.get('episode_number', instance.episode_number)
 
         if validated_data.get('type_of_transport')['id']:
-            instance.type_of_transport = validated_data.get(TypeOfTransport.objects.get(pk=validated_data.get('type_of_transport')['id']))
+            instance.type_of_transport = TypeOfTransport.objects.get(pk=validated_data.get('type_of_transport')['id'])
         else:
             instance.type_of_transport = None
         if validated_data.get('non_transport_reason')['id']:
-            instance.non_transport_reason = validated_data.get(NonTransportReason.objects.get(pk=validated_data.get('non_transport_reason')['id']))
+            instance.non_transport_reason = NonTransportReason.objects.get(pk=validated_data.get('non_transport_reason')['id'])
         else:
             instance.non_transport_reason = None
         if validated_data.get('hospital')['id']:
-            instance.hospital = validated_data.get(Hospital.objects.get(pk=validated_data.get('hospital')['id']))
+            instance.hospital = Hospital.objects.get(pk=validated_data.get('hospital')['id'])
         else:
             instance.hospital = None
 

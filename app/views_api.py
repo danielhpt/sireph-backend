@@ -724,7 +724,7 @@ class VictimSymptom(APIView):
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
-        data['victim'] = victim
+        data['victim'] = victim.id
         serializer = SymptomDetailsSerializer(data=data)
 
         if serializer.is_valid():
@@ -740,6 +740,7 @@ class VictimSymptom(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         symptom = get_object_or_404(Symptom, pk=victim)
         data = request.data.copy()
+        data['victim'] = victim.id
         serializer = SymptomDetailsSerializer(symptom, data=data)
 
         if serializer.is_valid():
@@ -761,7 +762,7 @@ class VictimProcedureRCP(APIView):
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
-        data['victim'] = victim
+        data['victim'] = victim.id
         serializer = ProcedureRCPSerializer(data=data)
 
         if serializer.is_valid():
@@ -777,6 +778,7 @@ class VictimProcedureRCP(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureRCP = get_object_or_404(ProcedureRCP, pk=victim)
         data = request.data.copy()
+        data['victim'] = victim.id
         serializer = ProcedureRCPSerializer(procedureRCP, data=data)
 
         if serializer.is_valid():
@@ -798,7 +800,7 @@ class VictimProcedureVentilation(APIView):
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
-        data['victim'] = victim
+        data['victim'] = victim.id
         serializer = ProcedureVentilationSerializer(data=data)
 
         if serializer.is_valid():
@@ -814,6 +816,7 @@ class VictimProcedureVentilation(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureVentilation = get_object_or_404(ProcedureVentilation, pk=victim)
         data = request.data.copy()
+        data['victim'] = victim.id
         serializer = ProcedureVentilationSerializer(procedureVentilation, data=data)
 
         if serializer.is_valid():
@@ -835,7 +838,7 @@ class VictimProcedureProtocol(APIView):
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
-        data['victim'] = victim
+        data['victim'] = victim.id
         serializer = ProcedureProtocolSerializer(data=data)
 
         if serializer.is_valid():
@@ -851,6 +854,7 @@ class VictimProcedureProtocol(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureProtocol = get_object_or_404(ProcedureProtocol, pk=victim)
         data = request.data.copy()
+        data['victim'] = victim.id
         serializer = ProcedureProtocolSerializer(procedureProtocol, data=data)
 
         if serializer.is_valid():
@@ -872,7 +876,7 @@ class VictimProcedureCirculation(APIView):
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
-        data['victim'] = victim
+        data['victim'] = victim.id
         serializer = ProcedureCirculationSerializer(data=data)
 
         if serializer.is_valid():
@@ -888,6 +892,7 @@ class VictimProcedureCirculation(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureCirculation = get_object_or_404(ProcedureCirculation, pk=victim)
         data = request.data.copy()
+        data['victim'] = victim.id
         serializer = ProcedureCirculationSerializer(procedureCirculation, data=data)
 
         if serializer.is_valid():
@@ -909,7 +914,7 @@ class VictimProcedureScale(APIView):
     def post(self, request, victim_id):  # working
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
-        data['victim'] = victim
+        data['victim'] = victim.id
         serializer = ProcedureScaleSerializer(data=data)
 
         if serializer.is_valid():
@@ -925,6 +930,7 @@ class VictimProcedureScale(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         procedureScale = get_object_or_404(ProcedureScale, pk=victim)
         data = request.data.copy()
+        data['victim'] = victim.id
         serializer = ProcedureScaleSerializer(procedureScale, data=data)
 
         if serializer.is_valid():
