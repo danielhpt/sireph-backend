@@ -725,7 +725,7 @@ class VictimSymptom(APIView):
         victim = get_object_or_404(Victim, pk=victim_id)
         data = request.data.copy()
         data['victim'] = victim.id
-        serializer = SymptomDetailsSerializer(data=data)
+        serializer = SymptomSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
@@ -741,7 +741,7 @@ class VictimSymptom(APIView):
         symptom = get_object_or_404(Symptom, pk=victim)
         data = request.data.copy()
         data['victim'] = victim.id
-        serializer = SymptomDetailsSerializer(symptom, data=data)
+        serializer = SymptomSerializer(symptom, data=data)
 
         if serializer.is_valid():
             serializer.save()
