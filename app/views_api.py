@@ -264,11 +264,12 @@ class TechnicianActiveOccurrence(APIView):
         occurrence = get_object_or_404(Occurrence, pk=data.get("id"))
         occurrences = Occurrence.objects.filter(team__team_technicians__technician=technician, active=True)
         if len(occurrences) > 0:
-            if occurrences[0].id == occurrence.id:
-                serializer = OccurrenceAllDetailsSerializer(occurrence, data=data)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(status=status.HTTP_200_OK)
+            for o in occurrences:
+                if o.id == occurrence.id:
+                    serializer = OccurrenceAllDetailsSerializer(occurrence, data=data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
