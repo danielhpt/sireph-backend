@@ -96,8 +96,10 @@ class Logout(APIView):
     """User Logout"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)
 
-    def get(self, request):  # todo sem swagger?
+    @swagger_auto_schema(manual_parameters=[auth])
+    def get(self, request):
         try:
             request.user.auth_token.delete()
         except User_Auth.auth_token.RelatedObjectDoesNotExist:
@@ -108,7 +110,7 @@ class Logout(APIView):
 
 # done
 class UserDetailByToken(APIView):
-    """List the details of an User"""
+    """List the details of a User"""
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     auth = openapi.Parameter('Authorization', openapi.IN_HEADER, type=openapi.TYPE_STRING)

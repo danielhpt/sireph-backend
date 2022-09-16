@@ -158,7 +158,7 @@ entity ProcedureRCP {
     *recovery DateTime
     *downtime DateTime
     *mechanical_compressions int
-    *performed Boolean
+    *not_performed Boolean
 }
 
 entity ProcedureVentilation {

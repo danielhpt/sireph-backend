@@ -159,7 +159,7 @@
                         <li class="list-group-item"><b>Suspensão:</b> {{ victim.procedure_rcp.downtime }}</li>
                         <li class="list-group-item"><b>Compressões Mecânicas</b> {{ victim.procedure_rcp.mechanical_compressions }}</li>
                         <li class="list-group-item"><b>Não realizado:</b>
-                          {% if victim.procedure_rcp.performed %}
+                          {% if victim.procedure_rcp.not_performed %}
                                 Sim
                             {% else %}
                                 Não

@@ -398,7 +398,7 @@ class ProcedureRCP(models.Model):
     recovery = models.DateTimeField(null=True, blank=True)
     downtime = models.DateTimeField(null=True, blank=True)
     mechanical_compressions = models.BooleanField(default=False)
-    performed = models.BooleanField(default=False)
+    not_performed = models.BooleanField(default=False)
     victim = models.OneToOneField(
         Victim,
         on_delete=models.RESTRICT,
