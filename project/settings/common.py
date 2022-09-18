@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_extensions',
     'drf_yasg',
+    'tests.apps.TestsConfig',
 ]
 
 MIDDLEWARE = [
