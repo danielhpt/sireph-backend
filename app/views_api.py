@@ -1171,7 +1171,7 @@ class OccurrenceObject(APIView):
     @swagger_auto_schema(manual_parameters=[auth], request_body=OccurrenceSerializer)
     def post(self, request):
         data = request.data.copy()
-        if 'id' in data:
+        if data['id']:
             occurrence = Occurrence.objects.get(pk=data['id'])
             serializer = OccurrenceSerializer(occurrence, data=data)
         else:
