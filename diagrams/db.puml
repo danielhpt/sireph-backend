@@ -157,7 +157,7 @@ table( App.Victim ) {
 table( App.Evaluation ) {
   primary_key( id ): INTEGER
   column( hours ): TIMESTAMP
-  column( AVDS ): VARCHAR(1)
+  column( AVDS ): VARCHAR
   column( ventilation ): INTEGER
   column( SpO2 ): INTEGER
   column( O2_supply ): INTEGER
