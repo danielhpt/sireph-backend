@@ -9,6 +9,7 @@ skinparam class {
     BackgroundColor white
     ArrowColor #2688d4
     BorderColor #2688d4
+    BorderColor<<contrib.auth>> green
 }
 
 !define primary_key(x) <b><color:#b8861b><&key></color> x</b>
@@ -16,8 +17,9 @@ skinparam class {
 !define primary_foreign_key(x) <b><color:#b8861b><&key></color><color:#aaaaaa><&key></color> x</b>
 !define column(x) <color:#efefef><&media-record></color> x
 !define table(x) entity x << (T, white) >>
+!define tableAuth(x) entity x <<contrib.auth>>
 
-table( Auth.User ) {
+tableAuth( User ) {
   primary_key( id ): INTEGER
   column( password ): VARCHAR
   column( last_login ): TIMESTAMP
@@ -31,7 +33,7 @@ table( Auth.User ) {
   column( date_joined ): TIMESTAMP
 }
 
-table( App.Central ) {
+table( Central ) {
   primary_key( id ): INTEGER
   column( designation ): VARCHAR
   column( address ): VARCHAR
@@ -40,20 +42,20 @@ table( App.Central ) {
   column( is_administrative ): BOOLEAN
 }
 
-table( App.Team ) {
+table( Team ) {
   primary_key( id ): INTEGER
   column( active ): BOOLEAN
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
-table( App.Technician ) {
+table( Technician ) {
   primary_key( id ): INTEGER
   column( active ): BOOLEAN
   foreign_key( technician_id ): INTEGER <<FK>>
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
-table( App.TeamTechnician ) {
+table( TeamTechnician ) {
   primary_key( id ): INTEGER
   column( active ): BOOLEAN
   column( team_leader ): BOOLEAN
@@ -61,14 +63,14 @@ table( App.TeamTechnician ) {
   foreign_key( technician_id ): INTEGER <<FK>>
 }
 
-table( App.Dispatcher ) {
+table( Dispatcher ) {
   primary_key( id ): INTEGER
   column( active ): BOOLEAN
   foreign_key( dispatcher_id ): INTEGER <<FK>>
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
-table( App.Hospital ) {
+table( Hospital ) {
   primary_key( id ): INTEGER
   column( name ): VARCHAR
   column( address ): VARCHAR
@@ -78,14 +80,14 @@ table( App.Hospital ) {
   column( image_url ): VARCHAR
 }
 
-table( App.HospitalStaff ) {
+table( HospitalStaff ) {
   primary_key( id ): INTEGER
   column( active ): BOOLEAN
   foreign_key( employee_id ): INTEGER <<FK>>
   foreign_key( hospital_id ): INTEGER <<FK>>
 }
 
-table( App.Occurrence ) {
+table( Occurrence ) {
   primary_key( id ): INTEGER
   column( occurrence_number ): INTEGER
   column( entity ): VARCHAR
@@ -104,12 +106,12 @@ table( App.Occurrence ) {
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
-table( App.State ) {
+table( State ) {
   primary_key( id ): INTEGER
   column( state ): VARCHAR
 }
 
-table( App.OccurrenceState ) {
+table( OccurrenceState ) {
   primary_key( id ): INTEGER
   column( longitude ): NUMERIC
   column( latitude ): NUMERIC
@@ -118,17 +120,17 @@ table( App.OccurrenceState ) {
   foreign_key( state_id ): INTEGER <<FK>>
 }
 
-table( App.TypeOfTransport ) {
+table( TypeOfTransport ) {
   primary_key( id ): INTEGER
   column( type_of_transport ): VARCHAR
 }
 
-table( App.NonTransportReason ) {
+table( NonTransportReason ) {
   primary_key( id ): INTEGER
   column( non_transport_reason ): VARCHAR
 }
 
-table( App.Victim ) {
+table( Victim ) {
   primary_key( id ): INTEGER
   column( name ): VARCHAR
   column( birthdate ): DATE
@@ -154,7 +156,7 @@ table( App.Victim ) {
   foreign_key( hospital_id ): INTEGER <<FK>>
 }
 
-table( App.Evaluation ) {
+table( Evaluation ) {
   primary_key( id ): INTEGER
   column( hours ): TIMESTAMP
   column( AVDS ): VARCHAR
@@ -175,7 +177,7 @@ table( App.Evaluation ) {
   foreign_key( victim_id ): INTEGER <<FK>>
 }
 
-table( App.Glasgowscale ) {
+table( Glasgowscale ) {
   primary_foreign_key( evaluation_id ): INTEGER <<FK>>
   column( eyes ): INTEGER
   column( verbal ): INTEGER
@@ -183,7 +185,7 @@ table( App.Glasgowscale ) {
   column( total ): INTEGER
 }
 
-table( App.Pharmacy ) {
+table( Pharmacy ) {
   primary_key( id ): INTEGER
   column( time ): DATETIME
   column( pharmacy ): VARCHAR
@@ -193,13 +195,13 @@ table( App.Pharmacy ) {
   foreign_key( victim_id ): INTEGER <<FK>>
 }
 
-table( App.Symptom ) {
+table( Symptom ) {
   primary_foreign_key( victim_id ): INTEGER <<FK>>
   column( comments ): VARCHAR
   column( total_burn_area ): NUMERIC
 }
 
-table( App.Trauma ) {
+table( Trauma ) {
   primary_key( id ): INTEGER
   column( body_part ): VARCHAR
   column( type_of_injury ): VARCHAR
@@ -208,7 +210,7 @@ table( App.Trauma ) {
   foreign_key( symptom_id ): INTEGER <<FK>>
 }
 
-table( App.ProcedureRCP ) {
+table( ProcedureRCP ) {
   primary_foreign_key( victim_id ): INTEGER <<FK>>
   column( witnessed ): BOOLEAN
   column( SBV_DAE ): TIMESTAMP
@@ -221,7 +223,7 @@ table( App.ProcedureRCP ) {
   column( not_performed ): BOOLEAN
 }
 
-table( App.ProcedureVentilation ) {
+table( ProcedureVentilation ) {
   primary_foreign_key( victim_id ): INTEGER <<FK>>
   column( clearance ): BOOLEAN
   column( oropharyngeal ): BOOLEAN
@@ -232,7 +234,7 @@ table( App.ProcedureVentilation ) {
   column( cpap ): BOOLEAN
 }
 
-table( App.ProcedureProtocol ) {
+table( ProcedureProtocol ) {
   primary_foreign_key( victim_id ): INTEGER <<FK>>
   column( immobilization ): BOOLEAN
   column( TEPH ): BOOLEAN
@@ -244,7 +246,7 @@ table( App.ProcedureProtocol ) {
   column( VV_PCR ): BOOLEAN
 }
 
-table( App.ProcedureCirculation ) {
+table( ProcedureCirculation ) {
   primary_foreign_key( victim_id ): INTEGER <<FK>>
   column( temperature_monitoring ): BOOLEAN
   column( compression ): BOOLEAN
@@ -255,7 +257,7 @@ table( App.ProcedureCirculation ) {
   column( ecg ): BOOLEAN
 }
 
-table( App.ProcedureScale ) {
+table( ProcedureScale ) {
   primary_foreign_key( victim_id ): INTEGER <<FK>>
   column( cincinatti ): INTEGER
   column( PROACS ): INTEGER
@@ -264,45 +266,45 @@ table( App.ProcedureScale ) {
   column( RACE ): INTEGER
 }
 
-table( App.News ) {
+table( News ) {
   primary_key( id ): INTEGER
   column( title ): VARCHAR
   column( description ): VARCHAR
   column( image_url ): VARCHAR
 }
 
-Auth.User ||-d-o| App.Technician
-Auth.User ||-d-o| App.Dispatcher
-Auth.User ||-d-o| App.HospitalStaff
-App.Central ||-d-o{ App.Team
-App.Central ||-d-o{ App.Technician
-App.Central ||-d-o{ App.Dispatcher
-App.Team ||-r-|{ App.TeamTechnician
-App.Technician ||-d-o{ App.TeamTechnician
-App.HospitalStaff }o--|| App.Hospital
-App.Occurrence }o-u-o| App.Team
-App.Occurrence }o-u-o| App.Central
-App.OccurrenceState }o-r-|| App.Occurrence
-App.OccurrenceState }o-u-|| App.State
-App.Occurrence ||-d-o{ App.Victim
-App.Victim ||-l-o{ App.Evaluation
-App.Victim ||-l-o{ App.Pharmacy
-App.Victim ||-d-o| App.ProcedureRCP
-App.Victim ||-d-o| App.ProcedureCirculation
-App.Victim ||-d-o| App.ProcedureProtocol
-App.Victim ||-d-o| App.ProcedureScale
-App.Victim ||-d-o| App.ProcedureVentilation
-App.Victim ||-r-o| App.Symptom
-App.Victim }o-r-o| App.NonTransportReason
-App.Victim }o-r-o| App.TypeOfTransport
-App.Victim }o-r-o| App.Hospital
-App.Trauma }o-l-|| App.Symptom
-App.Evaluation ||-u-o| App.Glasgowscale
-App.TypeOfTransport -[hidden]d- App.NonTransportReason
-App.NonTransportReason -[hidden]d- App.Symptom
-App.Evaluation -[hidden]d- App.Pharmacy
-App.ProcedureRCP-[hidden]d- App.ProcedureScale
-App.ProcedureRCP-[hidden]d- App.ProcedureCirculation
-App.Team -[hidden]d- App.State
-App.HospitalStaff -[hidden]d- App.News
+User ||-d-o| Technician
+User ||-d-o| Dispatcher
+User ||-d-o| HospitalStaff
+Central ||-d-o{ Team
+Central ||-d-o{ Technician
+Central ||-d-o{ Dispatcher
+Team ||-r-|{ TeamTechnician
+Technician ||-d-o{ TeamTechnician
+HospitalStaff }o--|| Hospital
+Occurrence }o-u-o| Team
+Occurrence }o-u-o| Central
+OccurrenceState }o-r-|| Occurrence
+OccurrenceState }o-u-|| State
+Occurrence ||-d-o{ Victim
+Victim ||-l-o{ Evaluation
+Victim ||-l-o{ Pharmacy
+Victim ||-d-o| ProcedureRCP
+Victim ||-d-o| ProcedureCirculation
+Victim ||-d-o| ProcedureProtocol
+Victim ||-d-o| ProcedureScale
+Victim ||-d-o| ProcedureVentilation
+Victim ||-r-o| Symptom
+Victim }o-r-o| NonTransportReason
+Victim }o-r-o| TypeOfTransport
+Victim }o-r-o| Hospital
+Trauma }o-l-|| Symptom
+Evaluation ||-u-o| Glasgowscale
+TypeOfTransport -[hidden]d- NonTransportReason
+NonTransportReason -[hidden]d- Symptom
+Evaluation -[hidden]d- Pharmacy
+ProcedureRCP-[hidden]d- ProcedureScale
+ProcedureRCP-[hidden]d- ProcedureCirculation
+Team -[hidden]d- State
+HospitalStaff -[hidden]d- News
 @enduml
