@@ -5,6 +5,7 @@ hide circle
 skinparam linetype ortho
 hide empty methods
 
+
 entity User {}
 
 entity Central {
@@ -134,6 +135,14 @@ entity Evaluation {
     *NEWS int
 }
 
+entity GlasgowScale {
+    *Evaluation
+    *eyes int
+    *verbal int
+    *motor int
+    *total int
+}
+
 entity Pharmacy {
     *Victim
     *time Time
@@ -146,8 +155,17 @@ entity Pharmacy {
 entity Symptom {
     *Victim
     *comments Text
-    *image_path Text
+    *total_burn_area float
 }
+
+entity Trauma {
+    *Symptom
+    *body_part Text
+    *type_of_injury Text
+    *closed Boolean
+    *burn_degree Text
+}
+
 
 entity ProcedureRCP {
     *Victim
@@ -229,5 +247,6 @@ Victim ||--|| Symptom
 Victim }|--|| NonTransportReason
 Victim }|--|| TypeOfTransport
 Victim }|--|| Hospital
-
+Trauma }|--|| Symptom
+GlasgowScale }|--|| Evaluation
 @enduml
