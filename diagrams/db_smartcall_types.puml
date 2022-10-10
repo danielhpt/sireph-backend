@@ -1,0 +1,51 @@
+@startuml
+hide empty methods
+hide circle
+skinparam roundcorner 5
+skinparam linetype ortho
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+    BorderColor<<contrib.auth>> green
+}
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define primary_foreign_key(x) <b><color:#b8861b><&key></color><color:#aaaaaa><&key></color> x</b>
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+!define tableAuth(x) entity x <<Outsystems>>
+
+table( Motive ) {
+  primary_key( Id ): INTEGER
+  column( Label ): VARCHAR
+  column( Description ): VARCHAR
+  column( Order ): INTEGER
+  column( Is_Active ): BOOLEAN
+  column( Is_Pain ): BOOLEAN
+  foreign_key( ChannelId ): INTEGER <<FK>>
+}
+
+table( Channel ) {
+  primary_key( Id ): INTEGER
+  column( Label ): VARCHAR
+  column( Contact ): INTEGER
+  column( Order ): INTEGER
+  column( Is_Active ): BOOLEAN
+}
+
+table( PainScale ) {
+  primary_key( Id ): INTEGER
+  column( Label ): VARCHAR
+  column( LevelOfPain ): INTEGER
+  column( Order ): INTEGER
+  column( Is_Active ): BOOLEAN
+  foreign_key( ChannelId ): INTEGER <<FK>>
+}
+
+Channel --{ PainScale
+Channel --{ Motive
+@enduml

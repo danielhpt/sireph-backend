@@ -1,0 +1,118 @@
+@startuml
+hide empty methods
+hide circle
+skinparam roundcorner 5
+skinparam linetype ortho
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+    BorderColor<<contrib.auth>> green
+}
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define primary_foreign_key(x) <b><color:#b8861b><&key></color><color:#aaaaaa><&key></color> x</b>
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+!define tableAuth(x) entity x <<SIREPH structure>>
+
+table( LocalUser ) {
+    primary_key( Id ): INTEGER
+    column( IdentificationNumber ): INTEGER
+    column( Name ): VARCHAR
+    column( Username ): VARCHAR
+    column( Email ): VARCHAR
+    column( MobilePhone ): INTEGER
+    column( External_Id ): INTEGER
+    column(HasSBVKnowledge): BOOLEAN
+}
+
+table( LocalProfile ) {
+    primary_key( IdentificationNumber ): INTEGER
+    foreign_key( LocalUserId ): INTEGER <<FK>>
+    column( Name ): VARCHAR
+    column( Surname ): VARCHAR
+    column( Address ): VARCHAR
+    column( DateOfBirth ): TIMESTAMP
+    column( Gender ): VARCHAR
+    column( EmergencyContact ): VARCHAR
+    column( BloodType ): VARCHAR
+    column( HasCronicalDisease ): BOOLEAN
+    column( CronicalDiseases ): VARCHAR
+    column( HasAllergies ): BOOLEAN
+    column( Allergies ): VARCHAR
+    column( HasUsualMedication ): BOOLEAN
+    column( UsualMedication ): VARCHAR
+    column( FileBin ): BINARY DATA
+}
+
+table(  LocalVictim ) {
+    primary_key( Id ): INTEGER
+    column( Name ): VARCHAR
+    column( Birthdate ): TIMESTAMP
+    column( Age ): INTEGER
+    column( Gender ): VARCHAR
+    foreign_key( LocalProfileId ): INTEGER <<FK>>
+    column( Circumstances ): VARCHAR
+    column( DiseaseHistory ): VARCHAR
+    column( Allergies ): VARCHAR
+    column( UsualMedication ): VARCHAR
+    foreign_key( LocalOccurrenceId): INTEGER <<FK>>
+    foreign_key( LocalHospitalId): INTEGER <<FK>>
+}
+
+table( LocalHospital ) {
+    primary_key( Id ): INTEGER
+    column( Name ): VARCHAR
+    column( Address ): VARCHAR
+    column( Contact ): INTEGER
+    column( ImageURL ): VARCHAR
+}
+
+table( LocalOccurrence ) {
+    primary_key( Id ): INTEGER
+    column( OccurrenceNumber ): INTEGER
+    foreign_key( MotiveId ): INTEGER <<FK>>
+    column( Local ): VARCHAR
+    column( GPSCoordinates ): VARCHAR
+    column( AlertMode ): BOOLEAN
+    column( CreatedOn ): TIMESTAMP
+    foreign_key( ChannelId ): INTEGER <<FK>>
+}
+
+table( Motive ) {
+  primary_key( Id ): INTEGER
+  column( Label ): VARCHAR
+  column( Description ): VARCHAR
+  column( Order ): INTEGER
+  column( Is_Active ): BOOLEAN
+  column( Is_Pain ): BOOLEAN
+  foreign_key( ChannelId ): INTEGER <<FK>>
+}
+
+table( Channel ) {
+  primary_key( Id ): INTEGER
+  column( Label ): VARCHAR
+  column( Contact ): INTEGER
+  column( Order ): INTEGER
+  column( Is_Active ): BOOLEAN
+}
+
+table( LocalNews ) {
+    primary_key( Id ): INTEGER
+    column( Title ): VARCHAR
+    column( Description ): VARCHAR
+    column( ImageURL ): VARCHAR
+}
+
+LocalVictim -- LocalHospital
+LocalVictim }-- LocalOccurrence
+LocalUser --{ LocalProfile
+LocalProfile --{ LocalVictim
+Channel --{ Motive
+LocalOccurrence -- Motive
+LocalOccurrence -- Channel
+@enduml

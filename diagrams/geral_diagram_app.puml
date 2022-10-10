@@ -35,7 +35,10 @@ node "SmartCall" {
             [REST API]
         }
     }
+}
 
+node "Google API" {
+    [Geocoding API] <..> [REST API]
 }
 
 [Django] ..> 5432:uses
