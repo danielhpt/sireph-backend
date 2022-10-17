@@ -12,51 +12,62 @@ skinparam class {
     BorderColor<<contrib.auth>> green
 }
 
-!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
-!define foreign_key(x) <color:#aaaaaa><&key></color> x
-!define primary_foreign_key(x) <b><color:#b8861b><&key></color><color:#aaaaaa><&key></color> x</b>
-!define column(x) <color:#efefef><&media-record></color> x
+!define primary_key(x) <b><color:#b8861b><&key></color> {field} x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> {field} x
+!define primary_foreign_key(x) <b><color:#b8861b><&key></color><color:#aaaaaa><&key></color> {field} x</b>
+!define column(x) <color:#efefef><&media-record></color> {field} x
 !define table(x) entity x << (T, white) >>
 !define tableAuth(x) entity x <<contrib.auth>>
 
+json Legenda {
+   "<<PK>>": "Chave primária",
+   "<<FK>>": "Chave estrangeira",
+   "INTEGER": "Número inteiro",
+   "NUMERIC (x, y)": "Número decimal, com 'x' digitos e 'y' casas decimais",
+   "BOOLEAN": "Valor booleano",
+   "TIMESTAMP": "Data e hora",
+   "DATE": "Data",
+   "VARCHAR (x)": "Texto, com 'x' caractéres"
+}
+
 tableAuth( User ) {
-  primary_key( id ): INTEGER
-  column( password ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( password ): VARCHAR (128)
   column( last_login ): TIMESTAMP
   column( is_superuser ): BOOLEAN
-  column( username ): VARCHAR
-  column( first_name ): VARCHAR
-  column( last_name ): VARCHAR
-  column( email ): VARCHAR
+  column( username ): VARCHAR (150)
+  column( first_name ): VARCHAR (150)
+  column( last_name ): VARCHAR (150)
+  column( email ): VARCHAR (254)
   column( is_staff ): BOOLEAN
   column( is_active ): BOOLEAN
   column( date_joined ): TIMESTAMP
 }
 
 table( Central ) {
-  primary_key( id ): INTEGER
-  column( designation ): VARCHAR
-  column( address ): VARCHAR
-  column( area_of_action ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( designation ): VARCHAR (50)
+  column( address ): VARCHAR (50)
+  column( area_of_action ): VARCHAR (50)
   column( contact ): INTEGER
   column( is_administrative ): BOOLEAN
 }
 
 table( Team ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( active ): BOOLEAN
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
 table( Technician ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( active ): BOOLEAN
   foreign_key( technician_id ): INTEGER <<FK>>
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
 table( TeamTechnician ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( active ): BOOLEAN
   column( team_leader ): BOOLEAN
   foreign_key( team_id ): INTEGER <<FK>>
@@ -64,40 +75,40 @@ table( TeamTechnician ) {
 }
 
 table( Dispatcher ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( active ): BOOLEAN
   foreign_key( dispatcher_id ): INTEGER <<FK>>
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
 table( Hospital ) {
-  primary_key( id ): INTEGER
-  column( name ): VARCHAR
-  column( address ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( name ): VARCHAR (50)
+  column( address ): VARCHAR (50)
   column( capacity ): INTEGER
   column( current_capacity ): INTEGER
   column( contact ): INTEGER
-  column( image_url ): VARCHAR
+  column( image_url ): VARCHAR (250)
 }
 
 table( HospitalStaff ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( active ): BOOLEAN
   foreign_key( employee_id ): INTEGER <<FK>>
   foreign_key( hospital_id ): INTEGER <<FK>>
 }
 
 table( Occurrence ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( occurrence_number ): INTEGER
-  column( entity ): VARCHAR
-  column( mean_of_assistance ): VARCHAR
-  column( motive ): VARCHAR
+  column( entity ): VARCHAR (50)
+  column( mean_of_assistance ): VARCHAR (50)
+  column( motive ): VARCHAR (50)
   column( number_of_victims ): INTEGER
-  column( local ): VARCHAR
-  column( gps_coordinates ): VARCHAR
-  column( parish ): VARCHAR
-  column( municipality ): VARCHAR
+  column( local ): VARCHAR (100)
+  column( gps_coordinates ): VARCHAR (100)
+  column( parish ): VARCHAR (50)
+  column( municipality ): VARCHAR (50)
   column( active ): BOOLEAN
   column( alert_mode ): BOOLEAN
   column( created_on ): TIMESTAMP
@@ -107,49 +118,49 @@ table( Occurrence ) {
 }
 
 table( State ) {
-  primary_key( id ): INTEGER
-  column( state ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( state ): VARCHAR (25)
 }
 
 table( OccurrenceState ) {
-  primary_key( id ): INTEGER
-  column( longitude ): NUMERIC
-  column( latitude ): NUMERIC
+  primary_key( id ): INTEGER <<PK>>
+  column( longitude ): NUMERIC (15, 7)
+  column( latitude ): NUMERIC (15, 7)
   column( date_time ): TIMESTAMP
   foreign_key( occurrence_id ): INTEGER <<FK>>
   foreign_key( state_id ): INTEGER <<FK>>
 }
 
 table( TypeOfTransport ) {
-  primary_key( id ): INTEGER
-  column( type_of_transport ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( type_of_transport ): VARCHAR (100)
 }
 
 table( NonTransportReason ) {
-  primary_key( id ): INTEGER
-  column( non_transport_reason ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( non_transport_reason ): VARCHAR (100)
 }
 
 table( Victim ) {
-  primary_key( id ): INTEGER
-  column( name ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( name ): VARCHAR (50)
   column( birthdate ): DATE
   column( age ): INTEGER
-  column( gender ): VARCHAR
-  column( identity_number ): VARCHAR
-  column( address ): VARCHAR
-  column( circumstances ): VARCHAR
-  column( disease_history ): VARCHAR
-  column( allergies ): VARCHAR
-  column( last_meal ): VARCHAR
+  column( gender ): VARCHAR (25)
+  column( identity_number ): VARCHAR (30)
+  column( address ): VARCHAR (100)
+  column( circumstances ): VARCHAR (100)
+  column( disease_history ): VARCHAR (200)
+  column( allergies ): VARCHAR (100)
+  column( last_meal ): VARCHAR (50)
   column( last_meal_time ): TIMESTAMP
-  column( usual_medication ): VARCHAR
-  column( risk_situation ): VARCHAR
+  column( usual_medication ): VARCHAR (100)
+  column( risk_situation ): VARCHAR (50)
   column( medical_followup ): BOOLEAN
   column( hospital_checkin_date ): TIMESTAMP
   column( episode_number ): INTEGER
-  column( comments ): VARCHAR
-  column( type_of_emergency ): VARCHAR
+  column( comments ): VARCHAR (400)
+  column( type_of_emergency ): VARCHAR (100)
   foreign_key( type_of_transport_id ): INTEGER <<FK>>
   foreign_key( non_transport_reason_id ): INTEGER <<FK>>
   foreign_key( occurrence_id ): INTEGER <<FK>>
@@ -157,20 +168,20 @@ table( Victim ) {
 }
 
 table( Evaluation ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( hours ): TIMESTAMP
-  column( AVDS ): VARCHAR
+  column( AVDS ): VARCHAR (1)
   column( ventilation ): INTEGER
   column( SpO2 ): INTEGER
   column( O2_supply ): INTEGER
   column( EtCO2 ): INTEGER
   column( pulse ): INTEGER
   column( ecg ): BOOLEAN
-  column( skin ): VARCHAR
-  column( temperature ): NUMERIC
+  column( skin ): VARCHAR (50)
+  column( temperature ): NUMERIC (3, 1)
   column( systolic_blood_pressure ): INTEGER
   column( diastolic_blood_pressure ): INTEGER
-  column( pupils ): VARCHAR
+  column( pupils ): VARCHAR (50)
   column( pain ): INTEGER
   column( glycemia ): INTEGER
   column( NEWS ): INTEGER
@@ -178,7 +189,7 @@ table( Evaluation ) {
 }
 
 table( Glasgowscale ) {
-  primary_foreign_key( evaluation_id ): INTEGER <<FK>>
+  primary_foreign_key( evaluation_id ): INTEGER <<PK, FK>>
   column( eyes ): INTEGER
   column( verbal ): INTEGER
   column( motor ): INTEGER
@@ -186,36 +197,36 @@ table( Glasgowscale ) {
 }
 
 table( Pharmacy ) {
-  primary_key( id ): INTEGER
+  primary_key( id ): INTEGER <<PK>>
   column( time ): DATETIME
-  column( pharmacy ): VARCHAR
-  column( dose ): VARCHAR
-  column( route ): VARCHAR
-  column( adverse_effect ): VARCHAR
+  column( pharmacy ): VARCHAR (50)
+  column( dose ): VARCHAR (50)
+  column( route ): VARCHAR (50)
+  column( adverse_effect ): VARCHAR (50)
   foreign_key( victim_id ): INTEGER <<FK>>
 }
 
 table( Symptom ) {
-  primary_foreign_key( victim_id ): INTEGER <<FK>>
-  column( comments ): VARCHAR
-  column( total_burn_area ): NUMERIC
+  primary_foreign_key( victim_id ): INTEGER <<PK, FK>>
+  column( comments ): VARCHAR (400)
+  column( total_burn_area ): NUMERIC (6, 3)
 }
 
 table( Trauma ) {
-  primary_key( id ): INTEGER
-  column( body_part ): VARCHAR
-  column( type_of_injury ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( body_part ): VARCHAR (20)
+  column( type_of_injury ): VARCHAR (1)
   column( closed ): BOOLEAN
-  column( burn_degree ): VARCHAR
+  column( burn_degree ): VARCHAR (2)
   foreign_key( symptom_id ): INTEGER <<FK>>
 }
 
 table( ProcedureRCP ) {
-  primary_foreign_key( victim_id ): INTEGER <<FK>>
+  primary_foreign_key( victim_id ): INTEGER <<PK, FK>>
   column( witnessed ): BOOLEAN
   column( SBV_DAE ): TIMESTAMP
   column( SIV_SAV ): TIMESTAMP
-  column( first_rhythm ): VARCHAR
+  column( first_rhythm ): VARCHAR (25)
   column( nr_shocks ): INTEGER
   column( recovery ): TIMESTAMP
   column( downtime ): TIMESTAMP
@@ -224,7 +235,7 @@ table( ProcedureRCP ) {
 }
 
 table( ProcedureVentilation ) {
-  primary_foreign_key( victim_id ): INTEGER <<FK>>
+  primary_foreign_key( victim_id ): INTEGER <<PK, FK>>
   column( clearance ): BOOLEAN
   column( oropharyngeal ): BOOLEAN
   column( laryngeal_tube ): BOOLEAN
@@ -235,7 +246,7 @@ table( ProcedureVentilation ) {
 }
 
 table( ProcedureProtocol ) {
-  primary_foreign_key( victim_id ): INTEGER <<FK>>
+  primary_foreign_key( victim_id ): INTEGER <<PK, FK>>
   column( immobilization ): BOOLEAN
   column( TEPH ): BOOLEAN
   column( SIV ): BOOLEAN
@@ -247,7 +258,7 @@ table( ProcedureProtocol ) {
 }
 
 table( ProcedureCirculation ) {
-  primary_foreign_key( victim_id ): INTEGER <<FK>>
+  primary_foreign_key( victim_id ): INTEGER <<PK, FK>>
   column( temperature_monitoring ): BOOLEAN
   column( compression ): BOOLEAN
   column( tourniquet ): BOOLEAN
@@ -258,7 +269,7 @@ table( ProcedureCirculation ) {
 }
 
 table( ProcedureScale ) {
-  primary_foreign_key( victim_id ): INTEGER <<FK>>
+  primary_foreign_key( victim_id ): INTEGER <<PK, FK>>
   column( cincinatti ): INTEGER
   column( PROACS ): INTEGER
   column( RTS ): INTEGER
@@ -267,10 +278,10 @@ table( ProcedureScale ) {
 }
 
 table( News ) {
-  primary_key( id ): INTEGER
-  column( title ): VARCHAR
-  column( description ): VARCHAR
-  column( image_url ): VARCHAR
+  primary_key( id ): INTEGER <<PK>>
+  column( title ): VARCHAR (500)
+  column( description ): VARCHAR (500)
+  column( image_url ): VARCHAR (500)
 }
 
 User ||-d-o| Technician
@@ -307,4 +318,7 @@ ProcedureRCP-[hidden]d- ProcedureScale
 ProcedureRCP-[hidden]d- ProcedureCirculation
 Team -[hidden]d- State
 HospitalStaff -[hidden]d- News
+
+Legenda -[hidden]r- Central
+Legenda -[hidden]d- Glasgowscale
 @enduml

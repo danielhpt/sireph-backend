@@ -5,20 +5,17 @@
 !include <tupadr3/common>
 !include <office/Devices/device_tablet_android>
 
-cloud "Hetzner Cloud" {
+
     node "Server" {
-      frame "Localhost" {
         component "Gunicorn" {
           [Django] - ()8000
         }
-      }
       [Nginx] --> ()8000:proxy
       [Nginx] - ()82:API
       database "DataBase" {
         [PostgreSQL] - ()5432
       }
     }
-}
 
 [Django] ..> 5432:uses
 
