@@ -23,11 +23,11 @@ json Legenda {
    "<<PK>>": "Chave primária",
    "<<FK>>": "Chave estrangeira",
    "INTEGER": "Número inteiro",
-   "NUMERIC (x, y)": "Número decimal, com 'x' digitos e 'y' casas decimais",
+   "NUMERIC (x, y)": "Número decimal, com 'x' dígitos e 'y' casas decimais",
    "BOOLEAN": "Valor booleano",
    "TIMESTAMP": "Data e hora",
    "DATE": "Data",
-   "VARCHAR (x)": "Texto, com 'x' caractéres"
+   "VARCHAR (x)": "Texto, com 'x' caracteres"
 }
 
 tableAuth( User ) {
