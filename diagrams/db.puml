@@ -22,6 +22,7 @@ skinparam class {
 json Legenda {
    "<<PK>>": "Chave primária",
    "<<FK>>": "Chave estrangeira",
+   "SERIAL": "Número inteiro, maior que 0 e auto-incremental",
    "INTEGER": "Número inteiro",
    "NUMERIC (x, y)": "Número decimal, com 'x' dígitos e 'y' casas decimais",
    "BOOLEAN": "Valor booleano",
@@ -31,7 +32,7 @@ json Legenda {
 }
 
 tableAuth( User ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( password ): VARCHAR (128)
   column( last_login ): TIMESTAMP
   column( is_superuser ): BOOLEAN
@@ -45,7 +46,7 @@ tableAuth( User ) {
 }
 
 table( Central ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( designation ): VARCHAR (50)
   column( address ): VARCHAR (50)
   column( area_of_action ): VARCHAR (50)
@@ -54,20 +55,20 @@ table( Central ) {
 }
 
 table( Team ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( active ): BOOLEAN
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
 table( Technician ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( active ): BOOLEAN
   foreign_key( technician_id ): INTEGER <<FK>>
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
 table( TeamTechnician ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( active ): BOOLEAN
   column( team_leader ): BOOLEAN
   foreign_key( team_id ): INTEGER <<FK>>
@@ -75,14 +76,14 @@ table( TeamTechnician ) {
 }
 
 table( Dispatcher ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( active ): BOOLEAN
   foreign_key( dispatcher_id ): INTEGER <<FK>>
   foreign_key( central_id ): INTEGER <<FK>>
 }
 
 table( Hospital ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( name ): VARCHAR (50)
   column( address ): VARCHAR (50)
   column( capacity ): INTEGER
@@ -92,14 +93,14 @@ table( Hospital ) {
 }
 
 table( HospitalStaff ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( active ): BOOLEAN
   foreign_key( employee_id ): INTEGER <<FK>>
   foreign_key( hospital_id ): INTEGER <<FK>>
 }
 
 table( Occurrence ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( occurrence_number ): INTEGER
   column( entity ): VARCHAR (50)
   column( mean_of_assistance ): VARCHAR (50)
@@ -118,12 +119,12 @@ table( Occurrence ) {
 }
 
 table( State ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( state ): VARCHAR (25)
 }
 
 table( OccurrenceState ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( longitude ): NUMERIC (15, 7)
   column( latitude ): NUMERIC (15, 7)
   column( date_time ): TIMESTAMP
@@ -132,17 +133,17 @@ table( OccurrenceState ) {
 }
 
 table( TypeOfTransport ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( type_of_transport ): VARCHAR (100)
 }
 
 table( NonTransportReason ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( non_transport_reason ): VARCHAR (100)
 }
 
 table( Victim ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( name ): VARCHAR (50)
   column( birthdate ): DATE
   column( age ): INTEGER
@@ -168,7 +169,7 @@ table( Victim ) {
 }
 
 table( Evaluation ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( hours ): TIMESTAMP
   column( AVDS ): VARCHAR (1)
   column( ventilation ): INTEGER
@@ -197,7 +198,7 @@ table( Glasgowscale ) {
 }
 
 table( Pharmacy ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( time ): DATETIME
   column( pharmacy ): VARCHAR (50)
   column( dose ): VARCHAR (50)
@@ -213,7 +214,7 @@ table( Symptom ) {
 }
 
 table( Trauma ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( body_part ): VARCHAR (20)
   column( type_of_injury ): VARCHAR (1)
   column( closed ): BOOLEAN
@@ -278,7 +279,7 @@ table( ProcedureScale ) {
 }
 
 table( News ) {
-  primary_key( id ): INTEGER <<PK>>
+  primary_key( id ): SERIAL <<PK>>
   column( title ): VARCHAR (500)
   column( description ): VARCHAR (500)
   column( image_url ): VARCHAR (500)

@@ -1,0 +1,132 @@
+@startuml
+hide empty methods
+hide empty fields
+hide circle
+skinparam roundcorner 5
+skinparam linetype ortho
+skinparam shadowing false
+skinparam handwritten false
+skinparam class {
+    BackgroundColor white
+    ArrowColor #2688d4
+    BorderColor #2688d4
+    BorderColor<<contrib.auth>> green
+}
+
+!define primary_key(x) <b><color:#b8861b><&key></color> {field} x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> {field} x
+!define primary_foreign_key(x) <b><color:#b8861b><&key></color><color:#aaaaaa><&key></color> {field} x</b>
+!define column(x) <color:#efefef><&media-record></color> {field} x
+!define table(x) entity x << (T, white) >>
+!define tableAuth(x) entity x <<contrib.auth>>
+
+tableAuth( User ) {
+}
+
+table( Central ) {
+}
+
+table( Team ) {
+}
+
+table( Technician ) {
+}
+
+table( TeamTechnician ) {
+}
+
+table( Dispatcher ) {
+}
+
+table( Hospital ) {
+}
+
+table( HospitalStaff ) {
+}
+
+table( Occurrence ) {
+}
+
+table( State ) {
+}
+
+table( OccurrenceState ) {
+}
+
+table( TypeOfTransport ) {
+}
+
+table( NonTransportReason ) {
+}
+
+table( Victim ) {
+}
+
+table( Evaluation ) {
+}
+
+table( Glasgowscale ) {
+}
+
+table( Pharmacy ) {
+}
+
+table( Symptom ) {
+}
+
+table( Trauma ) {
+}
+
+table( ProcedureRCP ) {
+}
+
+table( ProcedureVentilation ) {
+}
+
+table( ProcedureProtocol ) {
+}
+
+table( ProcedureCirculation ) {
+}
+
+table( ProcedureScale ) {
+}
+
+table( News ) {
+}
+
+User ||-d-o| Technician
+User ||-d-o| Dispatcher
+User ||-d-o| HospitalStaff
+Central ||-d-o{ Team
+Central ||-d-o{ Technician
+Central ||-d-o{ Dispatcher
+Team ||-r-|{ TeamTechnician
+Technician ||-d-o{ TeamTechnician
+HospitalStaff }o--|| Hospital
+Occurrence }o-u-o| Team
+Occurrence }o-u-o| Central
+OccurrenceState }o-r-|| Occurrence
+OccurrenceState }o-u-|| State
+Occurrence ||-d-o{ Victim
+Victim ||-l-o{ Evaluation
+Victim ||-l-o{ Pharmacy
+Victim ||-d-o| ProcedureRCP
+Victim ||-d-o| ProcedureCirculation
+Victim ||-d-o| ProcedureProtocol
+Victim ||-d-o| ProcedureScale
+Victim ||-d-o| ProcedureVentilation
+Victim ||-r-o| Symptom
+Victim }o-r-o| NonTransportReason
+Victim }o-r-o| TypeOfTransport
+Victim }o-r-o| Hospital
+Trauma }o-l-|| Symptom
+Evaluation ||-u-o| Glasgowscale
+TypeOfTransport -[hidden]d- NonTransportReason
+NonTransportReason -[hidden]d- Symptom
+Evaluation -[hidden]d- Pharmacy
+ProcedureRCP-[hidden]d- ProcedureScale
+ProcedureRCP-[hidden]d- ProcedureCirculation
+Team -[hidden]d- State
+HospitalStaff -[hidden]d- News
+@enduml
